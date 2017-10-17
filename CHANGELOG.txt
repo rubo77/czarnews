@@ -1,0 +1,77 @@
+<?
+/*
+CHANGELOG
+CzarNews 1.12
+
+Created file 'cn_words.php'
+Created table 'cn_words'
+Created table 'cn_comments'
+Altered all existing table structures, see below
+
+Table Structure Changes
+*/
+
+### Make table 'cn_words'
+CREATE TABLE `cn_words` (
+`id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+`word` VARCHAR(255) NOT NULL, 
+`type` VARCHAR(255) NOT NULL, 
+`replace` LONGTEXT NOT NULL
+); 
+
+### Make table 'cn_comments'
+CREATE TABLE `cn_comments` (
+  `id` bigint(20) NOT NULL default '0',
+  `news_id` bigint(20) NOT NULL default '0',
+  `name` varchar(255) NOT NULL default '',
+  `email` varchar(255) NOT NULL default '',
+  `comment` text NOT NULL,
+  `date` varchar(10) NOT NULL default ''
+);
+
+### Added 'words' column to user table (for user admin access to 'words')
+ALTER TABLE `cn_users` ADD `words` ENUM('on', 'off') NOT NULL;
+
+### Make 'user' field UNIQUE
+ALTER TABLE `cn_users` ADD UNIQUE (`user`) ;
+
+### Add 'source' and 'version' column to configuration table
+ALTER TABLE `cn_config` ADD `source` VARCHAR( 255 ) NOT NULL ;
+ALTER TABLE `cn_config` ADD `author` VARCHAR( 255 ) NOT NULL; 
+ALTER TABLE `cn_config` ADD `version` VARCHAR( 255 ) NOT NULL ;
+
+### Add columns to CONFIG table
+ALTER TABLE `cn_config` ADD `words` ENUM( 'on', 'off' ) NOT NULL ;
+ALTER TABLE `cn_config` ADD `comments` ENUM( 'on', 'off' ) NOT NULL ;
+ALTER TABLE `cn_config` ADD `search` ENUM( 'on', 'off' ) NOT NULL ;
+ALTER TABLE `cn_config` ADD `pages` ENUM( 'on', 'off' ) NOT NULL ;
+ALTER TABLE `cn_config` ADD `catbox` ENUM( 'on', 'off' ) NOT NULL ; 
+
+### Add 'content2' column to news table
+ALTER TABLE `cn_news` ADD `content2` LONGTEXT NOT NULL AFTER `content`; 
+ALTER TABLE `cn_news` ADD `sumstory` ENUM('on','off') DEFAULT 'off' NOT NULL AFTER `content2`;
+
+
+
+#############################
+# Coding Changes
+#############################
+/*
+- Optimized several lines of code for faster execution speed
+- Fixed bug with category display box (would not display if user was not logged in)
+- Added 'All Categories' news display selection for category box
+- Added news search feature with highlighting of searched word
+- Added Comments with current username protection (somone cannot post a comment under a CzarNews user's name w/o their password)
+- Fixed security bug that allowed users to delete news items outside their category permissions
+- Added 'cn_info.php' file to explain a little about the script and myself
+- Added 'cn_generate.php' file to generate PHP code that you can use to include the file 'news.php'
+- Added ability to create news summaries and full stories
+- Added ability to move and delete multiple news items at once
+- Fixed news setting to allow user permission: 'allow user to edit/delete only posts that they themselves posted'
+- Added warning for having 'install.php' on server after script is installed
+
+
+
+
+*/
+?>

@@ -1,4 +1,5 @@
 <?
+require( "../includes/php7_fix.inc.php");
 ##########################################
 ### 
 ### CzarNews v1.12

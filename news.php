@@ -1,5 +1,6 @@
 <?
 require($tpath . "cn_config.php");
+require( "../includes/php7_fix.inc.php");
 
 // Set limits for multiple pages 
 if(!isset($pg)) { $pg = 1; }

@@ -1,11 +1,11 @@
 <?
 require($tpath . "cn_config.php");
-require( "../includes/php7_fix.inc.php");
+require_once( "includes/php7_fix.inc.php");
 
 // Set limits for multiple pages 
 if(!isset($pg)) { $pg = 1; }
 // Number of news items to display per page 
-$pgset = $set[newslimit];
+$pgset = $set['newslimit'];
 $lims = ($pg-1)*$pgset;
 
 // If article id is set [v1.01] 

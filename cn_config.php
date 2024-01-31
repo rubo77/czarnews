@@ -1,5 +1,5 @@
-<?
-require( "../includes/php7_fix.inc.php");
+<?php
+require_once( "includes/php7_fix.inc.php");
 ##########################################
 ### 
 ### CzarNews v1.12
@@ -45,10 +45,10 @@ $t_words = "cn_words";
 $now = strtotime('now');
 
 // Retrieve Script Configuration Settings
-$q[sets] = mysql_query("SELECT * FROM $t_conf", $link) or E("Couldn't retrieve configuration settings:<br>" . mysql_error());
-$set = mysql_fetch_array($q[sets], MYSQL_ASSOC);
+$q['sets'] = mysql_query("SELECT * FROM $t_conf", $link) or E("Couldn't retrieve configuration settings:<br>" . mysql_error());
+$set = mysql_fetch_array($q['sets'], MYSQL_ASSOC);
 
-if($cnver > $set[version]) {
+if($cnver > $set['version']) {
 include ($tpath . "install.php");
 exit;
 }
@@ -56,9 +56,9 @@ exit;
 // User functions
 if (isset($cncook) && $op != "logout") {
 list ($usern, $passw) = split ('[,]', $cncook);
-$q[useri] = mysql_query("SELECT * FROM $t_user WHERE user='$usern' && pass='$passw'", $link);
-if (mysql_num_rows($q[useri]) != 0) {
-$useri = mysql_fetch_array($q[useri], MYSQL_ASSOC);
+$q['useri'] = mysql_query("SELECT * FROM $t_user WHERE user='$usern' && pass='$passw'", $link);
+if (mysql_num_rows($q['useri']) != 0) {
+$useri = mysql_fetch_array($q['useri'], MYSQL_ASSOC);
 } else {
 setcookie('cncook','',time()-28800,'/');
 }
@@ -66,7 +66,7 @@ setcookie('cncook','',time()-28800,'/');
 setcookie('cncook','',time()-28800,'/');
 }
 // Asseble user cetegories into an array
-$ucats = explode(", ", $useri[categories]); 
+$ucats = explode(", ", $useri['categories']); 
 
 ### Timezones Array ###
 $tzones = Array(
@@ -167,8 +167,8 @@ exit;
 function getinfo($id,$field="user") {
 GLOBAL $link, $t_user;
 
-$q[uinfo] = mysql_query("SELECT $field FROM $t_user WHERE id='$id'", $link);
-$inf = mysql_fetch_array($q[uinfo], MYSQL_ASSOC);
+$q['uinfo'] = mysql_query("SELECT $field FROM $t_user WHERE id='$id'", $link);
+$inf = mysql_fetch_array($q['uinfo'], MYSQL_ASSOC);
 return "$inf[$field]";
 }
 
@@ -176,8 +176,8 @@ return "$inf[$field]";
 function catBox($boxname="cat",$cat="",$jump="no",$mode="admin") {
 global $t_cats, $link, $useri;
 
-$q[box] = mysql_query("SELECT * FROM $t_cats ORDER BY name ASC", $link) or E("Couldn't select categories:<br>" . mysql_error());
-$catnum = mysql_num_rows($q[box]);
+$q['box'] = mysql_query("SELECT * FROM $t_cats ORDER BY name ASC", $link) or E("Couldn't select categories:<br>" . mysql_error());
+$catnum = mysql_num_rows($q['box']);
 if($catnum == "0" && $mode == "admin") {
 print "[ No categories ]&nbsp;&nbsp;&nbsp;(You can still post without them)";
 } else {
@@ -193,22 +193,22 @@ location=document.theform.<?=$boxname?>.options[document.theform.<?=$boxname?>.s
 <? if($jump == "yes") { ?><form name="theform" action="" method="post"><? } ?>	
 <select name="<?=$boxname?>"<? if($jump == "yes") { ?> onChange="gone()" <? } ?>>
 <?
-if($useri[categories] == "all" || $mode != "admin") {
+if($useri['categories'] == "all" || $mode != "admin") {
 // Print "View All" selection for view all categories [v1.12]
 if($mode != "admin") { print "<option value=\"$PHP_SELF?\">View All</option>\n"; }
-while($cv = mysql_fetch_array($q[box], MYSQL_ASSOC)) {
+while($cv = mysql_fetch_array($q['box'], MYSQL_ASSOC)) {
 ?>
-<option value="<? if($jump == "yes") { ?><?=$PHP_SELF?>?<?=$boxname?>=<? } ?><? print $cv[id]; ?>"<?if($cat==$cv[id]){print " SELECTED";}?>><? print stripslashes($cv[name]); ?></option>
+<option value="<? if($jump == "yes") { ?><?=$PHP_SELF?>?<?=$boxname?>=<? } ?><? print $cv['id']; ?>"<?if($cat==$cv['id']){print " SELECTED";}?>><? print stripslashes($cv['name']); ?></option>
 <? if($jump == "yes") { ?></form><? } ?>
 <? }
 } else {
 ### Assemble the categories field into an array for selection ###
-$cats = explode(", ", $useri[categories]);
+$cats = explode(", ", $useri['categories']);
 foreach($cats as $cv) {
-$q[cat] = mysql_query("SELECT * FROM $t_cats WHERE id = '$cv'", $link) or E("Couldn't select category with id:<br>" . mysql_error());
-$cva = mysql_fetch_array($q[cat], MYSQL_ASSOC);
+$q['cat'] = mysql_query("SELECT * FROM $t_cats WHERE id = '$cv'", $link) or E("Couldn't select category with id:<br>" . mysql_error());
+$cva = mysql_fetch_array($q['cat'], MYSQL_ASSOC);
 ?>
-<option value="<? print $cv; ?>"<?if($cat==$cv){print " SELECTED";}?>><? print stripslashes($cva[name]); ?>
+<option value="<? print $cv; ?>"<?if($cat==$cv){print " SELECTED";}?>><? print stripslashes($cva['name']); ?>
 <?
 }
 }
@@ -268,7 +268,7 @@ function highlight($x,$var) {
                    $i += strlen($var);
            }
            else {
-               $xtemp .= $x{$i};
+               $xtemp .= $x[$i];
                $i++;
            }
        }

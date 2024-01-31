@@ -13,7 +13,7 @@ if($go == "true") {
 if($demo == "on") { print S("This would normally update and save the changes you have made in the configuration table."); }
 ### Save changes into DB
 $sitename = addslashes($sitename);
-$q[update] = mysql_query("UPDATE $t_conf SET sitename='$sitename', siteurl='$siteurl', scripturl='$scripturl', newslimit='$newslimit', timezone='$timezone', dateform='$dateform', output='$output', source='$source', author='$author', coms_text='$coms_text', words='$words', comments='$comments', search='$search', pages='$pages', catbox='$catbox'", $link) or E("Could not update news configurations:<br>" . mysql_error());
+$q['update'] = mysql_query("UPDATE $t_conf SET sitename='$sitename', siteurl='$siteurl', scripturl='$scripturl', newslimit='$newslimit', timezone='$timezone', dateform='$dateform', output='$output', source='$source', author='$author', coms_text='$coms_text', words='$words', comments='$comments', search='$search', pages='$pages', catbox='$catbox'", $link) or E("Could not update news configurations:<br>" . mysql_error());
 echo S("News configurations have been updated");
 }
 }
@@ -40,15 +40,15 @@ $setauthor = "<a href=\"mailto:{aemail}\">{aname}</a>";
 $setcoms = "View/Post Comment ({cnum})";
 
 // Check if config settings already exist
-$q[chk] = mysql_db_query($dbname,"SELECT COUNT(*) from $t_conf");
-$confnum = mysql_result($q[chk],0,"COUNT(*)"); 
+$q['chk'] = mysql_db_query($dbname,"SELECT COUNT(*) from $t_conf");
+$confnum = mysql_result($q['chk'],0,"COUNT(*)"); 
 
 if($confnum != "1") {
-$q[del] = mysql_query("DELETE FROM $t_conf", $link) or E("Could not clear configuration settings:<br>" . mysql_error());
-$q[prep] = mysql_query("INSERT INTO $t_conf (sitename, siteurl, scripturl, newslimit, timezone, dateform, output, source, author, coms_text, version, words, comments, search, pages, catbox) VALUES ('', 'http://$HTTP_HOST/', 'http://$HTTP_HOST$rtpath', '15', '$servtime', 'M d, Y', '$defoutput', '$setsource', '$setauthor', '$setcoms', '$cnver', 'on', 'on', 'on', 'on', 'on')", $link) or E("Could not prepare configuration settings:<br>" . mysql_error());
+$q['del'] = mysql_query("DELETE FROM $t_conf", $link) or E("Could not clear configuration settings:<br>" . mysql_error());
+$q['prep'] = mysql_query("INSERT INTO $t_conf (sitename, siteurl, scripturl, newslimit, timezone, dateform, output, source, author, coms_text, version, words, comments, search, pages, catbox) VALUES ('', 'http://$HTTP_HOST/', 'http://$HTTP_HOST$rtpath', '15', '$servtime', 'M d, Y', '$defoutput', '$setsource', '$setauthor', '$setcoms', '$cnver', 'on', 'on', 'on', 'on', 'on')", $link) or E("Could not prepare configuration settings:<br>" . mysql_error());
 }
-$q[edit] = mysql_query("SELECT * FROM $t_conf LIMIT 1", $link) or E("Could not retieve configuration settings:<br>" . mysql_error());
-$ev = mysql_fetch_array($q[edit], MYSQL_ASSOC);
+$q['edit'] = mysql_query("SELECT * FROM $t_conf LIMIT 1", $link) or E("Could not retieve configuration settings:<br>" . mysql_error());
+$ev = mysql_fetch_array($q['edit'], MYSQL_ASSOC);
 ?>
 
 <form method="post" action="<? echo $PHP_SELF; ?>" name="theform">

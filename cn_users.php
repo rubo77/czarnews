@@ -8,14 +8,14 @@ if($useri[users] != "on" && $useri[admin] != "on") {
 print E("You are not allowed to edit users");
 }
 
-$q[count] = mysql_query("SELECT * FROM $t_user", $link) or E("Couldn't select users:<br>" . mysql_error());
-$usernum = mysql_num_rows($q[count]);
+$q['count'] = mysql_query("SELECT * FROM $t_user", $link) or E("Couldn't select users:<br>" . mysql_error());
+$usernum = mysql_num_rows($q['count']);
 
 if(isset($op)) {
 ### Check user permissions
 if(isset($id)) {
-$q[chk] = mysql_query("SELECT * FROM $t_user WHERE id = '$id'", $link) or E("Couldn't validate user access:<br>" . mysql_error());
-$ev = mysql_fetch_array($q[chk], MYSQL_ASSOC);
+$q['chk'] = mysql_query("SELECT * FROM $t_user WHERE id = '$id'", $link) or E("Couldn't validate user access:<br>" . mysql_error());
+$ev = mysql_fetch_array($q['chk'], MYSQL_ASSOC);
 if($useri[admin] == "off" && $ev[admin] == "on") {
 print E("You do not have permission to edit admin accounts");
 }
@@ -36,7 +36,7 @@ if($allcats == "sel") { if($cats == "") { print E("You did not select any catego
 if(is_array($cats)) { $cats = implode(", ", $cats); }
 ### Add a new user into DB
 $time = strtotime("now");
-$q[add] = mysql_query ("INSERT INTO $t_user (id, user, pass, email, created, last_login, cookie, categories, admin, news, users, cats, config, words) VALUES ('', '$user', '$pass', '$email', '$time', '$time', '1', '$cats', '$admin', '$news', '$users', '$categories', '$config', '$words')", $link) or E("Could not insert user:<br>" . mysql_error());
+$q['add'] = mysql_query ("INSERT INTO $t_user (id, user, pass, email, created, last_login, cookie, categories, admin, news, users, cats, config, words) VALUES ('', '$user', '$pass', '$email', '$time', '$time', '1', '$cats', '$admin', '$news', '$users', '$categories', '$config', '$words')", $link) or E("Could not insert user:<br>" . mysql_error());
 echo S("New user has been added");
 exit;
 }
@@ -52,14 +52,14 @@ print E("You do not have permission to edit users in the demo");
 if($allcats == "sel") { if($cats == "") { print E("You did not select any categories for this user"); } } else { $cats = "all"; }
 ### Assemble the category array into one string for database entry ###
 if(is_array($cats)) { $cats = implode(", ", $cats); }
-$q[update] = mysql_query ("UPDATE $t_user SET user='$user', pass='$pass', email='$email', categories='$cats', admin='$admin', news='$news', users='$users', cats='$categories', config='$config', words='$words' WHERE id = '$id'", $link) or E("Could not update user:<br>" . mysql_error());
+$q['update'] = mysql_query ("UPDATE $t_user SET user='$user', pass='$pass', email='$email', categories='$cats', admin='$admin', news='$news', users='$users', cats='$categories', config='$config', words='$words' WHERE id = '$id'", $link) or E("Could not update user:<br>" . mysql_error());
 echo S("User has been edited");
 exit;
 }
 ### Set variables for editing
 $button_txt = "Save User";
-$q[edit] = mysql_query("SELECT * FROM $t_user WHERE id = '$id'", $link) or E("Couldn't retieve user info:<br>" . mysql_error());
-$ev = mysql_fetch_array($q[edit], MYSQL_ASSOC);
+$q['edit'] = mysql_query("SELECT * FROM $t_user WHERE id = '$id'", $link) or E("Couldn't retieve user info:<br>" . mysql_error());
+$ev = mysql_fetch_array($q['edit'], MYSQL_ASSOC);
 } elseif($op == "del") {
 
 if($id == $useri[id]) {
@@ -69,13 +69,13 @@ if($go == "true") {
 if($demo == "on") {
 print E("You do not have permission to edit users in the demo");
 }
-$q[del2] = mysql_query("DELETE FROM $t_user WHERE id = '$id'", $link) or E("Couldn't delete user:<br>" . mysql_error());
+$q['del2'] = mysql_query("DELETE FROM $t_user WHERE id = '$id'", $link) or E("Couldn't delete user:<br>" . mysql_error());
 echo S("User has been deleted");
 exit;
 }
 ### Delete user record
-$q[del] = mysql_query("SELECT user FROM $t_user WHERE id = '$id'", $link) or E("Couldn't select user:<br>" . mysql_error());
-$dv = mysql_fetch_array($q[del], MYSQL_ASSOC);
+$q['del'] = mysql_query("SELECT user FROM $t_user WHERE id = '$id'", $link) or E("Couldn't select user:<br>" . mysql_error());
+$dv = mysql_fetch_array($q['del'], MYSQL_ASSOC);
 ?>
 <form method="post" action="<? echo $PHP_SELF; ?>" name="theform">
 Are you sure you want to delete "<b><?=$dv[user]?></b>"?<br><br>
@@ -113,8 +113,8 @@ if($num == "0") { ?>
 } else {
 
 if($useri[cats] == "on" || $useri[admin] == "on") {
-$q[cats] = mysql_query("SELECT * FROM $t_cats", $link);
-$num = mysql_num_rows($q[cats]);
+$q['cats'] = mysql_query("SELECT * FROM $t_cats", $link);
+$num = mysql_num_rows($q['cats']);
 ?>
 <tr><td bgcolor="<? print $MenuBg2; ?>">
 Categories:
@@ -133,7 +133,7 @@ Commented code below is buggy; It will be implimented at a later date
 /* if($useri[categories] == "all") { */
 ### Assemble the categories field into an array for selection ###
 $cats = explode(", ", $ev[categories]); 
-while($cv = mysql_fetch_array($q[cats], MYSQL_ASSOC)) {
+while($cv = mysql_fetch_array($q['cats'], MYSQL_ASSOC)) {
 print "<option value=\"$cv[id]\"";
 foreach($cats as $u) {
 if($cv[id] == $u) { print " selected"; } } print ">" . stripslashes($cv[name]) . "\n";
@@ -143,8 +143,8 @@ if($cv[id] == $u) { print " selected"; } } print ">" . stripslashes($cv[name]) .
 $listcats = explode(", ", $useri[categories]);
 $cats = explode(", ", $ev[categories]); 
 foreach($listcats as $cv) {
-$q[cat] = mysql_query("SELECT * FROM $t_cats WHERE id = '$cv'", $link) or E("Couldn't select category with id:<br>" . mysql_error());
-$cva = mysql_fetch_array($q[cat]);
+$q['cat'] = mysql_query("SELECT * FROM $t_cats WHERE id = '$cv'", $link) or E("Couldn't select category with id:<br>" . mysql_error());
+$cva = mysql_fetch_array($q['cat']);
 print "<option value=\"$cv\"";
 foreach($cats as $u) {
 if($cv == $u) { print " selected"; } } print ">" . stripslashes($cva[name]) . "\n";
@@ -221,8 +221,8 @@ if($ev[categories] == "all") { ?>
 <?
 } else {
 
-$q[info] = mysql_query("SELECT * FROM $t_user ORDER BY user ASC", $link) or E("Couldn't select users:<br>" . mysql_error());
-$num = mysql_num_rows($q[info]);
+$q['info'] = mysql_query("SELECT * FROM $t_user ORDER BY user ASC", $link) or E("Couldn't select users:<br>" . mysql_error());
+$num = mysql_num_rows($q['info']);
 print "<b>$num</b> User(s) Found<br><br><a href=\"?op=add\">[ Add User ]</a> or click on a user below to edit";
 if($num == "0") {
 print "<br><br>No users found in database";
@@ -231,7 +231,7 @@ print "<br><br>No users found in database";
 <table border="0" cellpadding="1" cellspacing="1" width="100%" align="center">
 <?
 $i=1;
-while ($r = mysql_fetch_array($q[info], MYSQL_ASSOC)) {
+while ($r = mysql_fetch_array($q['info'], MYSQL_ASSOC)) {
 ?>
 <tr><td nowrap><?=$i?>)&nbsp;</td>
 <td bgcolor="#EEEEEE" width="80%">&nbsp;<a href="?op=edit&id=<?=$r[id]?>"><b><? echo $r[user]; ?></b></a></td>

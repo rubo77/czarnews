@@ -13,7 +13,7 @@ $content = addslashes($content);
 if(!isset($cat)) { $cat = 0; }
 if(empty($subject) || empty($content)) { print E("You have not filled in a subject and/or content for your news post"); }
 if(!in_array($cat, $ucats) && $useri[categories] != "all") { print E("You are not allowed to add news posts out of your category permisions"); }
-$q[add] = mysql_query ("INSERT INTO $t_news (id, author, cat, subject, content, content2, sumstory, date, source, sourceurl) VALUES ('', '$useri[id]', '$cat', '$subject', '$content', '$content2', '$sumstory', '$time', '$source', '$sourceurl')", $link) or E("Could not insert news:<br>" . mysql_error());
+$q['add'] = mysql_query ("INSERT INTO $t_news (id, author, cat, subject, content, content2, sumstory, date, source, sourceurl) VALUES ('', '$useri[id]', '$cat', '$subject', '$content', '$content2', '$sumstory', '$time', '$source', '$sourceurl')", $link) or E("Could not insert news:<br>" . mysql_error());
 
 echo S("New news has been added");
 exit;
@@ -21,8 +21,8 @@ exit;
 ### Set variables for adding
 $button_txt = "Add News";
 } elseif($op == "edit") {
-$q[edit] = mysql_query("SELECT * FROM $t_news WHERE id = '$id'", $link) or E("Couldn't retieve news info:<br>" . mysql_error());
-$ev = mysql_fetch_array($q[edit], MYSQL_ASSOC);
+$q['edit'] = mysql_query("SELECT * FROM $t_news WHERE id = '$id'", $link) or E("Couldn't retieve news info:<br>" . mysql_error());
+$ev = mysql_fetch_array($q['edit'], MYSQL_ASSOC);
 if(!in_array($ev[cat], $ucats) && $useri[categories] != "all") { print E("You are not allowed to edit news posts out of your category permisions"); }
 if($useri[news] != "on" && $useri[id] != $ev[id]) { print E("You are only allowed to edit your own news items"); }
 
@@ -32,7 +32,7 @@ if(empty($subject) || empty($content)) { print E("You have not filled in a subje
 ### Save changes into DB
 $news = addslashes($news);
 $context = addslashes($context);
-$q[update] = mysql_query ("UPDATE $t_news SET cat='$cat', subject='$subject', content='$content', content2='$content2', sumstory='$sumstory', source='$source', sourceurl='$sourceurl' WHERE id = '$id'", $link) or E("Could not update news:<br>" . mysql_error());
+$q['update'] = mysql_query ("UPDATE $t_news SET cat='$cat', subject='$subject', content='$content', content2='$content2', sumstory='$sumstory', source='$source', sourceurl='$sourceurl' WHERE id = '$id'", $link) or E("Could not update news:<br>" . mysql_error());
 echo S("News has been edited");
 exit;
 }
@@ -41,14 +41,14 @@ $button_txt = "Save News";
 } elseif($op == "del") {
 
 ### Fetch info about record
-$q[del] = mysql_query("SELECT * FROM $t_news WHERE id = '$id'", $link) or E("Couldn't select news:<br>" . mysql_error());
-$dv = mysql_fetch_array($q[del], MYSQL_ASSOC);
+$q['del'] = mysql_query("SELECT * FROM $t_news WHERE id = '$id'", $link) or E("Couldn't select news:<br>" . mysql_error());
+$dv = mysql_fetch_array($q['del'], MYSQL_ASSOC);
 if(!in_array($dv[cat], $ucats) && $useri[categories] != "all") { print E("You are not allowed to delete news posts out of your category permisions"); }
 if($useri[news] != "on" && $useri[id] != $dv[id]) { print E("You are only allowed to delete your own news items"); }
 if($go == "true") {
 ### Delete news record
-$q[del] = mysql_query("DELETE FROM $t_news WHERE id = '$id'", $link) or E("Couldn't delete news:<br>" . mysql_error());
-$q[del2] = mysql_query("DELETE FROM $t_coms WHERE news_id = '$id'", $link) or E("Couldn't delete comments:<br>" . mysql_error());
+$q['del'] = mysql_query("DELETE FROM $t_news WHERE id = '$id'", $link) or E("Couldn't delete news:<br>" . mysql_error());
+$q['del2'] = mysql_query("DELETE FROM $t_coms WHERE news_id = '$id'", $link) or E("Couldn't delete comments:<br>" . mysql_error());
 echo S("News item has been deleted");
 exit;
 }
@@ -67,15 +67,15 @@ if(count($item) <= "0") { print E("You must check at least one item"); }
 if($mode == "move") {
 if($go == "true") {
 foreach($item as $id => $t) {
-$q[upd] = mysql_query("SELECT * FROM $t_news WHERE id = '$id'", $link) or E("Couldn't select news:<br>" . mysql_error());
-$ev = mysql_fetch_array($q[upd], MYSQL_ASSOC);
+$q['upd'] = mysql_query("SELECT * FROM $t_news WHERE id = '$id'", $link) or E("Couldn't select news:<br>" . mysql_error());
+$ev = mysql_fetch_array($q['upd'], MYSQL_ASSOC);
 // Check the category against user permissions
 if(!in_array($ev[cat], $ucats) && $useri[categories] != "all") {
 $movs .= "$t <b>[NOT MOVED - INSUFFICIENT CATEGORY PERMISSIONS]</b><br>\n";
 } elseif($useri[news] != "on" && $useri[id] != $ev[id]) {
 $movs .= "$t <b>[NOT MOVED - INSUFFICIENT USER PERMISSIONS]</b><br>\n";
 } else {
-$q[del2] = mysql_query("UPDATE $t_news SET cat = '$cat' WHERE id = '$id'", $link) or E("Couldn't move news:<br>" . mysql_error());
+$q['del2'] = mysql_query("UPDATE $t_news SET cat = '$cat' WHERE id = '$id'", $link) or E("Couldn't move news:<br>" . mysql_error());
 $movs .= "$t<br>\n";
 }
 }
@@ -111,16 +111,16 @@ exit;
 } elseif($mode == "del") {
 if($go == "true") {
 foreach($item as $id => $t) {
-$q[del] = mysql_query("SELECT * FROM $t_news WHERE id = '$id'", $link) or E("Couldn't select news:<br>" . mysql_error());
-$dv = mysql_fetch_array($q[del], MYSQL_ASSOC);
+$q['del'] = mysql_query("SELECT * FROM $t_news WHERE id = '$id'", $link) or E("Couldn't select news:<br>" . mysql_error());
+$dv = mysql_fetch_array($q['del'], MYSQL_ASSOC);
 // Check the category against user permissions
 if(!in_array($dv[cat], $ucats) && $useri[categories] != "all") {
 $dels .= "$t <b>[NOT DELETED - INSUFFICIENT CATEGORY PERMISSIONS]</b><br>\n";
 } elseif($useri[news] != "on" && $useri[id] != $ev[id]) {
 $dels .= "$t <b>[NOT DELETED - INSUFFICIENT USER PERMISSIONS]</b><br>\n";
 } else {
-$q[del] = mysql_query("DELETE FROM $t_news WHERE id = '$id'", $link) or E("Couldn't delete news:<br>" . mysql_error());
-$q[del2] = mysql_query("DELETE FROM $t_coms WHERE news_id = '$id'", $link) or E("Couldn't delete comments:<br>" . mysql_error());
+$q['del'] = mysql_query("DELETE FROM $t_news WHERE id = '$id'", $link) or E("Couldn't delete news:<br>" . mysql_error());
+$q['del2'] = mysql_query("DELETE FROM $t_coms WHERE news_id = '$id'", $link) or E("Couldn't delete comments:<br>" . mysql_error());
 $dels .= "$t<br>\n";
 }
 }
@@ -215,11 +215,11 @@ if($useri[news] != "on") {
 $t_news .= " WHERE author = '$useri[id]'";
 }
 
-$q[info] = mysql_query("SELECT * FROM $t_news ORDER BY date DESC LIMIT $lims, $pgset", $link) or E( "Couldn't select news:<br>" . mysql_error());
+$q['info'] = mysql_query("SELECT * FROM $t_news ORDER BY date DESC LIMIT $lims, $pgset", $link) or E( "Couldn't select news:<br>" . mysql_error());
 // Count news posts that current user has access to
 $newsnum = 0;
-$q[count] = mysql_query("SELECT id FROM $t_news", $link) or E( "Couldn't count news:<br>" . mysql_error());
-while ($num = mysql_fetch_array($q[count], MYSQL_ASSOC)) {
+$q['count'] = mysql_query("SELECT id FROM $t_news", $link) or E( "Couldn't count news:<br>" . mysql_error());
+while ($num = mysql_fetch_array($q['count'], MYSQL_ASSOC)) {
 if(in_array($num[cat], $ucats) || $useri[categories] == "all") { $newsnum++; }
 }
 print "<b>$newsnum</b> News Article(s) Found<br><br><a href=\"?op=add\">[ Add News ]</a> or click on a news article below to edit";
@@ -231,10 +231,10 @@ print "<br><br>No news found in database";
 <form method="post" action="<? echo $PHP_SELF; ?>" name="theform">
 <?
 $i=$lims+1;
-while ($r = mysql_fetch_array($q[info], MYSQL_ASSOC)) {
+while ($r = mysql_fetch_array($q['info'], MYSQL_ASSOC)) {
 if(in_array($r[cat], $ucats) || $useri[categories] == "all") {
-$q[cinfo] = mysql_query("SELECT name FROM $t_cats WHERE id='$r[cat]'", $link);
-$inf = mysql_fetch_array($q[cinfo], MYSQL_ASSOC);
+$q['cinfo'] = mysql_query("SELECT name FROM $t_cats WHERE id='$r[cat]'", $link);
+$inf = mysql_fetch_array($q['cinfo'], MYSQL_ASSOC);
 ?>
 <tr><td bgcolor="#EEEEEE"><input type="checkbox" name="item[<?=$r[id]?>]" value="<?=cutstr($r[subject])?>"></td><td bgcolor="#EEEEEE" width="60%">&nbsp;<a href="?op=edit&id=<?=$r[id]?>"><b><? echo cutstr($r[subject]); ?></b></a></td><td bgcolor="#EEEEEE">&nbsp;<?=$inf[name]?>&nbsp;</td><td bgcolor="#EEEEEE" width="20%" align="right" nowrap>&nbsp;<? echo date("M d, Y",$r[date]); ?>&nbsp;</td><td><a href="?op=del&id=<?=$r[id]?>">[Delete]</a></td></tr>
 <?

@@ -5,8 +5,8 @@ include_once("cn_head.php");
 if($go == "true") {
 ### Retrieve user info for email
 if(empty($email)) { print E("You have not provided your email address"); }
-$q[fpass] = mysql_query ("SELECT * FROM $t_user WHERE email = '$email' LIMIT 1", $link) or E("Could not search users:<br>" . mysql_error());
-$inf = mysql_fetch_array($q[fpass], MYSQL_ASSOC) or E("There is no email that matches \"$email\" in the database");
+$q['fpass'] = mysql_query ("SELECT * FROM $t_user WHERE email = '$email' LIMIT 1", $link) or E("Could not search users:<br>" . mysql_error());
+$inf = mysql_fetch_array($q['fpass'], MYSQL_ASSOC) or E("There is no email that matches \"$email\" in the database");
 // Email header info
 $headers .= "MIME-Version: 1.0\n";
 $headers .= "Content-type: text/plain; charset=iso-8859-1\n";

@@ -12,8 +12,8 @@ $lims = ($pg-1)*$pgset;
 if(isset($a)) {
 // Comment posting [v1.12] 
 	if($post == "comment") {
-	$q[userchk] = mysql_query("SELECT * FROM $t_user WHERE user = '$name' LIMIT 1", $link) or E("Couldn't check reserved usernames:<br>" . mysql_error());
-	$usernum = mysql_num_rows($q[userchk]);
+	$q['userchk'] = mysql_query("SELECT * FROM $t_user WHERE user = '$name' LIMIT 1", $link) or E("Couldn't check reserved usernames:<br>" . mysql_error());
+	$usernum = mysql_num_rows($q['userchk']);
 	if(!isset($passw) || $usernum == "0") {
 		if($usernum == "1") {
 		?><b>Error</b><br><br>
@@ -30,15 +30,15 @@ if(isset($a)) {
 		// Post comment 
 		if(empty($name) || empty($email) || empty($comment)) { print("Please fill-in all fields.  All fields are required to post a comment.<p>");
 		} else {
-		$q[ins_com] = mysql_query("INSERT INTO $t_coms (id, news_id, name, email, comment, date, ip) VALUES ('', '$a', '$name', '$email', '$comment', '$now', '$REMOTE_ADDR')", $link) or E("Couldn't insert new comment:<br>" . mysql_error());
+		$q['ins_com'] = mysql_query("INSERT INTO $t_coms (id, news_id, name, email, comment, date, ip) VALUES ('', '$a', '$name', '$email', '$comment', '$now', '$REMOTE_ADDR')", $link) or E("Couldn't insert new comment:<br>" . mysql_error());
 		print "Your comment has been added.<br>[ <a href=\"$PHP_SELF?a=$a\">&lt;&lt; Go Back</a> ]<br><br>";
 		}
 		}
 	} else {
-		$q[userchk] = mysql_query("SELECT * FROM $t_user WHERE user = '$name' AND pass='$passw' LIMIT 1", $link) or E("Couldn't select news article:<br>" . mysql_error());
-		if(mysql_num_rows($q[userchk]) == "1") {
+		$q['userchk'] = mysql_query("SELECT * FROM $t_user WHERE user = '$name' AND pass='$passw' LIMIT 1", $link) or E("Couldn't select news article:<br>" . mysql_error());
+		if(mysql_num_rows($q['userchk']) == "1") {
 		// Post comment with protected username 
-		$q[ins_com] = mysql_query("INSERT INTO $t_coms (id, news_id, name, email, comment, date, ip) VALUES ('', '$a', '$name', '$email', '$comment', '$now', '$REMOTE_ADDR')", $link) or E("Couldn't insert new comment:<br>" . mysql_error());
+		$q['ins_com'] = mysql_query("INSERT INTO $t_coms (id, news_id, name, email, comment, date, ip) VALUES ('', '$a', '$name', '$email', '$comment', '$now', '$REMOTE_ADDR')", $link) or E("Couldn't insert new comment:<br>" . mysql_error());
 		print "You comment has been added.<br>[ <a href=\"$PHP_SELF?a=$a\">&lt;&lt; Go Back</a> ]<br><br>";
 		} else {
 		print "The password you entered was incorrect.<br>[ <a href=\"javascript:history.go(-1)\">&lt;&lt; Go Back</a> ]<br><br>";
@@ -47,26 +47,26 @@ if(isset($a)) {
 
 
 	} else {
-	$q[info] = mysql_query("SELECT * FROM $t_news WHERE id = '$a' LIMIT 1", $link) or E("Couldn't select news article:<br>" . mysql_error());
-	$newsnum = mysql_num_rows($q[info]);
+	$q['info'] = mysql_query("SELECT * FROM $t_news WHERE id = '$a' LIMIT 1", $link) or E("Couldn't select news article:<br>" . mysql_error());
+	$newsnum = mysql_num_rows($q['info']);
 	}
 
 // If search is performed [v1.12] 
 } elseif(isset($s)) {
-$q[info] = mysql_query("SELECT * FROM $t_news WHERE content LIKE '%$s%' ORDER BY date DESC LIMIT $lims, $pgset", $link) or E("Couldn't search news articles:<br>" . mysql_error());
-$newsnum = mysql_num_rows($q[info]);
+$q['info'] = mysql_query("SELECT * FROM $t_news WHERE content LIKE '%$s%' ORDER BY date DESC LIMIT $lims, $pgset", $link) or E("Couldn't search news articles:<br>" . mysql_error());
+$newsnum = mysql_num_rows($q['info']);
 
 // Retrieve all news items	
 } else {
 
 $extra = "";
 if($c != "") { $extra = "WHERE cat = '$c'"; }
-$q[cats] = mysql_query("SELECT * FROM $t_cats ORDER BY name ASC", $link) or E("Couldn't select categories:<br>" . mysql_error());
-$catnum = mysql_num_rows($q[cats]);
+$q['cats'] = mysql_query("SELECT * FROM $t_cats ORDER BY name ASC", $link) or E("Couldn't select categories:<br>" . mysql_error());
+$catnum = mysql_num_rows($q['cats']);
 
-$q[info] = mysql_query("SELECT * FROM $t_news $extra ORDER BY date DESC LIMIT $lims, $pgset", $link) or E("Couldn't select news:<br>" . mysql_error());
-$q[count] = mysql_query("SELECT id FROM $t_news $extra", $link) or E("Couldn't count news:<br>" . mysql_error());
-$newsnum = mysql_num_rows($q[count]);
+$q['info'] = mysql_query("SELECT * FROM $t_news $extra ORDER BY date DESC LIMIT $lims, $pgset", $link) or E("Couldn't select news:<br>" . mysql_error());
+$q['count'] = mysql_query("SELECT id FROM $t_news $extra", $link) or E("Couldn't count news:<br>" . mysql_error());
+$newsnum = mysql_num_rows($q['count']);
 
 if($catnum > "1" && $set[catbox] == "on") { ?>
 <table width="90%" border="0" cellspacing="0" cellpadding="0"><tr>
@@ -82,10 +82,10 @@ if($newsnum == "0") {
 print "<br>No news found in database<br><br>";
 }
 
-if(isset($q[info])) { // $q[info] check 
+if(isset($q['info'])) { // $q['info'] check 
 
 // Begin output of news items 
-while ($r = mysql_fetch_array($q[info], MYSQL_ASSOC)) {
+while ($r = mysql_fetch_array($q['info'], MYSQL_ASSOC)) {
 $auid = $r[author];
 $output = $set[output];
 $r[subject] = "<a name=\"cn_$r[id]\"></a>$r[subject]";
@@ -106,14 +106,14 @@ $output = str_replace("\n", "<br>\n", $output);
 
 // Use Keywords and word filter if filter is turned "on" [v1.12] 
 if($set[words] == "on") {
-$q[words] = mysql_query("SELECT * FROM $t_words ORDER BY word ASC", $link) or E("Couldn't select keywords:<br>" . mysql_error());
-while ($w = mysql_fetch_array($q[words], MYSQL_ASSOC)) {
-if($w[type] == "link") {
-$w[replace] = "<a href=\"$w[replaced]\" target=\"_blank\">$w[word]</a>";
-} elseif($w[type] == "picture") {
-$w[replace] = "<img src=\"$w[replaced]\" alt=\"$w[word]\">";
+$q['words'] = mysql_query("SELECT * FROM $t_words ORDER BY word ASC", $link) or E("Couldn't select keywords:<br>" . mysql_error());
+while ($w = mysql_fetch_array($q['words'], MYSQL_ASSOC)) {
+if($w['type'] == "link") {
+$w['replace'] = "<a href=\"$w['replaced']\" target=\"_blank\">$w['word']</a>";
+} elseif($w['type'] == "picture") {
+$w['replace'] = "<img src=\"$w['replaced']\" alt=\"$w['word']\">";
 }
-$output = str_replace("$w[word]", "$w[replaced]", $output);
+$output = str_replace("$w['word']", "$w['replaced']", $output);
 }
 }
 
@@ -146,8 +146,8 @@ $output = str_replace("{date}", "$r[date]", $output);
 
 // View/Post Comments Link [v1.12] 
 if($set[comments] == "on" && !isset($a)) {
-$q[comsn] = mysql_query("SELECT id FROM $t_coms WHERE news_id = '$r[id]' ORDER BY date ASC", $link) or E("Couldn't select comments for current news article:<br>" . mysql_error());
-$comsnum = mysql_num_rows($q[comsn]);
+$q['comsn'] = mysql_query("SELECT id FROM $t_coms WHERE news_id = '$r[id]' ORDER BY date ASC", $link) or E("Couldn't select comments for current news article:<br>" . mysql_error());
+$comsnum = mysql_num_rows($q['comsn']);
 if(empty($set[coms_text])) {
 $output = str_replace("{comments}", "<a href=\"" . $_SERVER['PHP_SELF'] . "?a=$r[id]\"><small>View/Post Comments ($comsnum)</small></a>", $output);
 } else {
@@ -173,14 +173,14 @@ print stripslashes($output);
 
 // If single article is viewed, and comments are turned "on", list comments [v1.12] 
 if(isset($a) && $set[comments] == "on") {
-$q[coms] = mysql_query("SELECT * FROM $t_coms WHERE news_id = '$a' ORDER BY date ASC", $link) or E("Couldn't select comments for current news article:<br>" . mysql_error());
-$comsnum = mysql_num_rows($q[coms]);
+$q['coms'] = mysql_query("SELECT * FROM $t_coms WHERE news_id = '$a' ORDER BY date ASC", $link) or E("Couldn't select comments for current news article:<br>" . mysql_error());
+$comsnum = mysql_num_rows($q['coms']);
 	if($comsnum != "0") {
 ?>
 <hr size="1" width="95%">
 <b>Comments: (<?=$comsnum?> total)</b><br>
 <?
-		while ($c = mysql_fetch_array($q[coms], MYSQL_ASSOC)) {
+		while ($c = mysql_fetch_array($q['coms'], MYSQL_ASSOC)) {
 		print "
 		<br>\n
 		<b>Name:</b> $c[name]<br>\n
@@ -252,7 +252,7 @@ print "</a>";
 }
 }
 
-} // End $q[info] check 
+} // End $q['info'] check 
 ?>
 </td>
 

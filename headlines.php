@@ -14,9 +14,9 @@ if(!isset($charnum)) { $charnum = "18"; }
 
 // Get news items from database, and order them from newest to oldest 
 if($c != "") { $t_news .= " WHERE cat = '$c'"; }
-$q[info] = mysql_query("SELECT * FROM $t_news ORDER BY date DESC LIMIT 0, $lim", $link);
+$q['info'] = mysql_query("SELECT * FROM $t_news ORDER BY date DESC LIMIT 0, $lim", $link);
 
-while($h = mysql_fetch_array($q[info], MYSQL_ASSOC)) {
+while($h = mysql_fetch_array($q['info'], MYSQL_ASSOC)) {
 // Edit the HTML code below for the output of your headlines 
 // Edit the HTML code between the dashed lines
 // ------------------------------------------------------------------

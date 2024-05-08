@@ -55,18 +55,18 @@ exit;
 
 // User functions
 if (isset($cncook) && $op != "logout") {
-list ($usern, $passw) = split ('[,]', $cncook);
-$q['useri'] = mysql_query("SELECT * FROM $t_user WHERE user='$usern' && pass='$passw'", $link);
-if (mysql_num_rows($q['useri']) != 0) {
-$useri = mysql_fetch_array($q['useri'], MYSQL_ASSOC);
-} else {
-setcookie('cncook','',time()-28800,'/');
-}
+ list ($usern, $passw) = split ('[,]', $cncook);
+ $q['useri'] = mysql_query("SELECT * FROM $t_user WHERE user='$usern' && pass='$passw'", $link);
+ if (mysql_num_rows($q['useri']) != 0) {
+  $useri = mysql_fetch_array($q['useri'], MYSQL_ASSOC);
+ } else {
+  setcookie('cncook','',time()-28800,'/');
+ }
 } elseif (isset($cncook) && $op == "logout") {
 setcookie('cncook','',time()-28800,'/');
 }
 // Asseble user cetegories into an array
-$ucats = explode(", ", $useri['categories']); 
+$ucats = explode(", ", isset($useri['categories'])?$useri['categories']:""); 
 
 ### Timezones Array ###
 $tzones = Array(

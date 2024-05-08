@@ -109,11 +109,11 @@ if($set[words] == "on") {
 $q['words'] = mysql_query("SELECT * FROM $t_words ORDER BY word ASC", $link) or E("Couldn't select keywords:<br>" . mysql_error());
 while ($w = mysql_fetch_array($q['words'], MYSQL_ASSOC)) {
 if($w['type'] == "link") {
-$w['replace'] = "<a href=\"$w['replaced']\" target=\"_blank\">$w['word']</a>";
+$w['replace'] = "<a href=\"".$w['replaced']."\" target=\"_blank\">".$w['word']."</a>";
 } elseif($w['type'] == "picture") {
-$w['replace'] = "<img src=\"$w['replaced']\" alt=\"$w['word']\">";
+$w['replace'] = "<img src=\"".$w['replaced']."\" alt=\"".$w['word']."\">";
 }
-$output = str_replace("$w['word']", "$w['replaced']", $output);
+$output = str_replace($w['word'], $w['replaced'], $output);
 }
 }
 

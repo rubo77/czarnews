@@ -1,11 +1,18 @@
 <?php
+// $tpath is set by the page that embeds this file; default to this
+// directory so news.php also works when requested directly. It must
+// never come from the request (remote file inclusion).
+if(!isset($tpath)) { $tpath = __DIR__ . "/"; }
 require($tpath . "cn_config.php");
-require_once( "includes/php7_fix.inc.php");
+require_once(__DIR__."/includes/php7_fix.inc.php");
 
 // Set limits for multiple pages 
 if(!isset($pg)) { $pg = 1; }
+$pg = max(1, (int)$pg);
 if(!isset($c)) { $c = ""; }
 if(!isset($post)) { $post = ""; }
+// Request ids are always numeric; incoming values go into SQL queries
+if(isset($a)) { $a = (int)$a; }
 // Number of news items to display per page 
 $pgset = $set['newslimit'];
 $lims = ($pg-1)*$pgset;
@@ -14,16 +21,19 @@ $lims = ($pg-1)*$pgset;
 if(isset($a)) {
 	// Comment posting [v1.12] 
 	if($post == "comment") {
-		$q['userchk'] = mysql_query("SELECT * FROM $t_user WHERE user = '$name' LIMIT 1", $link) or E("Couldn't check reserved usernames:<br>" . mysql_error());
+		$name_esc = mysql_real_escape_string($name ?? "", $link);
+		$email_esc = mysql_real_escape_string($email ?? "", $link);
+		$comment_esc = mysql_real_escape_string($comment ?? "", $link);
+		$q['userchk'] = mysql_query("SELECT * FROM $t_user WHERE user = '$name_esc' LIMIT 1", $link) or E("Couldn't check reserved usernames:<br>" . mysql_error());
 		$usernum = mysql_num_rows($q['userchk']);
 		if(!isset($passw) || $usernum == "0") {
 			if($usernum == "1") {
 				?><b>Error</b><br><br>
 				The username you entered is currently reserved.  To post with this username, please enter a password below:<br>
 				<div align="center"><form method="post" action="<?=$_SERVER['PHP_SELF']?>"><input type="password" name="passw">
-				<input type="hidden" name="name" value="<?=$name?>">
-				<input type="hidden" name="email" value="<?=$email?>">
-				<input type="hidden" name="comment" value="<?=$comment?>">
+				<input type="hidden" name="name" value="<?=htmlspecialchars($name ?? "", ENT_QUOTES)?>">
+				<input type="hidden" name="email" value="<?=htmlspecialchars($email ?? "", ENT_QUOTES)?>">
+				<input type="hidden" name="comment" value="<?=htmlspecialchars($comment ?? "", ENT_QUOTES)?>">
 				<input type="hidden" name="a" value="<?=$a?>">
 				<input type="hidden" name="post" value="comment">
 				<input type="submit" value="Submit">
@@ -32,15 +42,16 @@ if(isset($a)) {
 				// Post comment 
 				if(empty($name) || empty($email) || empty($comment)) { print("Please fill-in all fields.  All fields are required to post a comment.<p>");
 				} else {
-					$q['ins_com'] = mysql_query("INSERT INTO $t_coms (id, news_id, name, email, comment, date, ip) VALUES ('', '$a', '$name', '$email', '$comment', '$now', '{$_SERVER['REMOTE_ADDR']}')", $link) or E("Couldn't insert new comment:<br>" . mysql_error());
+					$q['ins_com'] = mysql_query("INSERT INTO $t_coms (id, news_id, name, email, comment, date, ip) VALUES ('', '$a', '$name_esc', '$email_esc', '$comment_esc', '$now', '{$_SERVER['REMOTE_ADDR']}')", $link) or E("Couldn't insert new comment:<br>" . mysql_error());
 					print "Your comment has been added.<br>[ <a href=\"{$_SERVER['PHP_SELF']}?a=$a\">&lt;&lt; Go Back</a> ]<br><br>";
 				}
 			}
 		} else {
-			$q['userchk'] = mysql_query("SELECT * FROM $t_user WHERE user = '$name' AND pass='$passw' LIMIT 1", $link) or E("Couldn't select news article:<br>" . mysql_error());
+			$passw_esc = mysql_real_escape_string($passw, $link);
+			$q['userchk'] = mysql_query("SELECT * FROM $t_user WHERE user = '$name_esc' AND pass='$passw_esc' LIMIT 1", $link) or E("Couldn't select news article:<br>" . mysql_error());
 			if(mysql_num_rows($q['userchk']) == "1") {
 				// Post comment with protected username 
-				$q['ins_com'] = mysql_query("INSERT INTO $t_coms (id, news_id, name, email, comment, date, ip) VALUES ('', '$a', '$name', '$email', '$comment', '$now', '{$_SERVER['REMOTE_ADDR']}')", $link) or E("Couldn't insert new comment:<br>" . mysql_error());
+				$q['ins_com'] = mysql_query("INSERT INTO $t_coms (id, news_id, name, email, comment, date, ip) VALUES ('', '$a', '$name_esc', '$email_esc', '$comment_esc', '$now', '{$_SERVER['REMOTE_ADDR']}')", $link) or E("Couldn't insert new comment:<br>" . mysql_error());
 				print "You comment has been added.<br>[ <a href=\"{$_SERVER['PHP_SELF']}?a=$a\">&lt;&lt; Go Back</a> ]<br><br>";
 			} else {
 				print "The password you entered was incorrect.<br>[ <a href=\"javascript:history.go(-1)\">&lt;&lt; Go Back</a> ]<br><br>";
@@ -55,14 +66,15 @@ if(isset($a)) {
 	
 	// If search is performed [v1.12] 
 } elseif(isset($s)) {
-	$q['info'] = mysql_query("SELECT * FROM $t_news WHERE content LIKE '%$s%' ORDER BY date DESC LIMIT $lims, $pgset", $link) or E("Couldn't search news articles:<br>" . mysql_error());
+	$s_esc = mysql_real_escape_string($s, $link);
+	$q['info'] = mysql_query("SELECT * FROM $t_news WHERE content LIKE '%$s_esc%' ORDER BY date DESC LIMIT $lims, $pgset", $link) or E("Couldn't search news articles:<br>" . mysql_error());
 	$newsnum = mysql_num_rows($q['info']);
 	
 	// Retrieve all news items	
 } else {
 	
 	$extra = "";
-	if($c != "") { $extra = "WHERE cat = '$c'"; }
+	if($c != "") { $extra = "WHERE cat = '" . (int)$c . "'"; }
 	$q['cats'] = mysql_query("SELECT * FROM $t_cats ORDER BY name ASC", $link) or E("Couldn't select categories:<br>" . mysql_error());
 	$catnum = mysql_num_rows($q['cats']);
 	
@@ -175,6 +187,17 @@ if(isset($q['info'])) { // $q['info'] check
 	
 	// If single article is viewed, and comments are turned "on", list comments [v1.12] 
 	if(isset($a) && $set['comments'] == "on") {
+		// Authenticated users with news/admin rights get a delete link
+		// per comment (dpost.php, v1.14 feature)
+		$com_admin = false;
+		if(!empty($_COOKIE['cncook']) && strpos($_COOKIE['cncook'], ',') !== false) {
+			list($cu, $cp) = explode(',', $_COOKIE['cncook'], 2);
+			$q['adm'] = mysql_query("SELECT news, admin FROM $t_user WHERE user='" . mysql_real_escape_string($cu, $link) . "' AND pass='" . mysql_real_escape_string($cp, $link) . "' LIMIT 1", $link);
+			if($q['adm'] && mysql_num_rows($q['adm']) == 1) {
+				$admrow = mysql_fetch_array($q['adm'], MYSQL_ASSOC);
+				$com_admin = ($admrow['news'] == "on" || $admrow['admin'] == "on");
+			}
+		}
 		$q['coms'] = mysql_query("SELECT * FROM $t_coms WHERE news_id = '$a' ORDER BY date ASC", $link) or E("Couldn't select comments for current news article:<br>" . mysql_error());
 		$comsnum = mysql_num_rows($q['coms']);
 		if($comsnum != "0") {
@@ -183,11 +206,15 @@ if(isset($q['info'])) { // $q['info'] check
 			<b>Comments: (<?=$comsnum?> total)</b><br>
 			<?php 
 			while ($c = mysql_fetch_array($q['coms'], MYSQL_ASSOC)) {
+				$c_name = htmlspecialchars($c['name'], ENT_QUOTES);
+				$c_email = htmlspecialchars($c['email'], ENT_QUOTES);
+				$c_comment = htmlspecialchars($c['comment'], ENT_QUOTES);
 				print "
 				<br>\n
-				<b>Name:</b> {$c['name']}<br>\n
-				<b>Email:</b> <a href=\"mailto:{$c['email']}\"></a>{$c['email']}<br>\n
-				<b>Comments:</b> {$c['comment']}<br>\n
+				<b>Name:</b> {$c_name}<br>\n
+				<b>Email:</b> {$c_email}<br>\n
+				<b>Comments:</b> {$c_comment}<br>\n
+				" . ($com_admin ? "<small>[ <a href=\"dpost.php?a={$c['id']}&n=$a\">delete</a> ]</small><br>\n" : "") . "
 				<br>\n
 				";
 			}

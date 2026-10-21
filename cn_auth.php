@@ -24,7 +24,9 @@ $passw = $_SESSION['passw'];
 }
 
 if (!empty($usern) && !empty($passw)) {
-$q['useri'] = mysql_query("SELECT * FROM $t_user WHERE user='$usern' && pass='$passw'", $link);
+$usern_esc = mysql_real_escape_string($usern, $link);
+$passw_esc = mysql_real_escape_string($passw, $link);
+$q['useri'] = mysql_query("SELECT * FROM $t_user WHERE user='$usern_esc' && pass='$passw_esc'", $link);
 if (mysql_num_rows($q['useri']) != 0) {
 $useri = mysql_fetch_array($q['useri']);
 if($useri['cookie'] == "0") { $logtime = 3600; } else { $logtime = $useri['cookie']*24*60*60; }

@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__."/../includes/php7_fix.inc.php");
+require_once(__DIR__."/includes/php7_fix.inc.php");
 ##########################################
 ### 
 ### CzarNews v2.0

@@ -47,6 +47,24 @@ web admin panel. No framework, no dependencies — plain PHP + MySQL.
 - login works without `register_globals`; cookie auth hardened
 - footer shows the real release year instead of `date("Y")`
 
+### Security fixes (v2.0)
+
+All known CVEs are fixed:
+
+- **CVE-2005-0859 / CVE-2006-3685** — remote file inclusion via the
+  `tpath` parameter: request variables can no longer overwrite it
+- **CVE-2006-1641** — SQL injection via `usern`/`passw` (cn_auth.php),
+  `s` (news.php search) and `a` (dpost.php): escaped or cast to int
+- **CVE-2006-1640** — stored XSS via the comment `email`/`name`/`comment`
+  fields: all comment output is `htmlspecialchars`-escaped
+- `dpost.php` (comment deletion for admins) re-implemented with
+  authentication and integer-cast ids
+
+### Changes since v1.12 (upstream 1.13/1.14 parity)
+
+- comment deletion (`dpost.php`) for logged-in admins, with a delete
+  link shown next to comments for authorized users
+
 ## Layout
 
 - `index.php` — admin panel (news list, add/edit/delete)

@@ -174,11 +174,20 @@ version check passes. The schema upgrade runs automatically.
 
 ## License
 
-Original CzarNews terms (see `readme.txt`): free for personal and
-commercial use as long as the credit link stays intact. Modifications are
-allowed; the original author asked not to redistribute modified copies —
-he has been unreachable for ~20 years; this repo exists to keep a working
-PHP-8 version available. Credit to Vance Lucas for the original.
+Original CzarNews terms, as shipped in the 2004 `readme.txt`:
+
+> This script is distributed for free by www.czaries.net, or my personal
+> collection of websites only. It is intended for use on websites of all
+> types, personal and commercial, as long as the credit link remains
+> intact and visible wherever the news is displayed. This script was made
+> in 2003 by Vance Lucas. If you choose to modify your copy of the
+> script, you have the right to do so freely. You may submit your
+> modifications to me, but please do not re-distribute the script with
+> your modifications, as it is not the original work.
+
+The original author has been unreachable for ~20 years and his site is
+offline; this fork exists to keep a working, secure PHP-8 version
+available. Credit to Vance Lucas for the original.
 
 ## Credits
 

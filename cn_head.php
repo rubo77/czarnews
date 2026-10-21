@@ -51,7 +51,7 @@ function openBox( thebox ) {
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 	<tr>
 		<td bgcolor="#FFFFFF">
-<a href="/"><img src="<?=$imgdir?>cn_logo_s.gif" width="140" height="100" alt="CzarNews" border="0"></a><br>
+&nbsp;<br>
 		</td>
 		<td bgcolor="#000000">
 <img src="<?=$imgdir?>spacer.gif" width="1" height="1"><br>

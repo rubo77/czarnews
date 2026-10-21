@@ -5,5 +5,5 @@
 $dbhost = "localhost";
 $dbname = "czarnews";
 $dbuser = "czarnews";
-$dbpass = "secret";
+$dbpass = "secret-43988z7t6448fh748fg87fg84g62";
 ?>

@@ -11,8 +11,8 @@ require_once(__DIR__."/includes/php7_fix.inc.php");
 $cnver = "2.1";
 ##########################################
 
-// $tpath ist in news.php im czarnews ordner definiert
-// empty when CzarNews runs directly from its own directory
+// $tpath is the absolute path prefix set by the page that includes
+// news.php; empty when CzarNews runs directly from its own directory
 if(!isset($tpath)) { $tpath = ""; }
 if(file_exists($tpath . "cn_dbdefs.php")) {
 // Include MySQL Definitions

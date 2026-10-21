@@ -1,7 +1,4 @@
 <?php
-$dbconnect=false;
-$db="czarnews";
-
 // register_globals:
 // 'tpath' is the include root for CzarNews - accepting it from the
 // request would allow remote file inclusion (CVE-2005-0859/2006-3685).

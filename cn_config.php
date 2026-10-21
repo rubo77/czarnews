@@ -2,13 +2,13 @@
 require_once(__DIR__."/../includes/php7_fix.inc.php");
 ##########################################
 ### 
-### CzarNews v1.12
+### CzarNews v2.0
 ### Made by: Czaries  [czaries@czaries.net]
 ### http://www.czaries.net/scripts/
 ### for more scripts and updates.
 ###
 ### Current Version, do not alter or script will not install right
-$cnver = "1.12";
+$cnver = "2.0";
 ##########################################
 
 // $tpath ist in news.php im czarnews ordner definiert

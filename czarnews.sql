@@ -1,6 +1,6 @@
 ##########################################
 ### 
-### CzarNews v1.12 MySQL Table Structures
+### CzarNews v2.0 MySQL Table Structures
 ### Made by: Czaries  [czaries@czaries.net]
 ### http://www.czaries.net/scripts/
 ### for more scripts and updates.

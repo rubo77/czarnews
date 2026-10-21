@@ -1,7 +1,7 @@
 <?php 
 ##########################################
 ### 
-### CzarNews v1.12
+### CzarNews v2.0
 ### Made by: Czaries  [czaries@czaries.net]
 ### http://www.czaries.net/scripts/
 ### for more scripts and updates.
@@ -23,7 +23,7 @@ print "&nbsp;";
 <html>
 
 <head>
-<title>CzarNews v1.12 :: <?=$pagetitle;?></title>
+<title>CzarNews v2.0 :: <?=$pagetitle;?></title>
 <meta name="Author" content="Vance Lucas">
 <meta name="Copyright" content="Copyright <?=date("Y")?> Vance Lucas - www.czaries.net">
 <link rel="stylesheet" href="sv_styles.css" type="text/css">

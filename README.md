@@ -151,4 +151,4 @@ PHP-8 version available. Credit to Vance Lucas for the original.
 ## Credits
 
 - Original: Vance Lucas (czaries.net, 2003–2004)
-- PHP 8.x port: eclabs.de, 2026
+- PHP 8.x port: eclabs.de (running on eclabs.de), 2026

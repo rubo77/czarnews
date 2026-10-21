@@ -11,7 +11,7 @@ print "<font color=#ff0000><b>Warning: \"install.php\" is a security risk, pleas
 	</tr>
 	<tr>
 		<td align="right">
-CzarNews v<?php  print $GLOBALS['set']['version'] ?? ""; ?> &copy; 2003&#8211;2004 Vance Lucas &middot; PHP-8.x-Port &copy; <?=date("Y");?> eclabs.de
+CzarNews v<?php  print $GLOBALS['set']['version'] ?? ""; ?> &copy; 2003&#8211;2004 Vance Lucas &middot; PHP-8.x-Port &copy; <?=date("Y");?> <a href="https://eclabs.de">eclabs.de</a>
 		</td>
 	</tr>
 </table>

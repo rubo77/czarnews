@@ -28,22 +28,22 @@ if(isset($a)) {
 		$usernum = mysql_num_rows($q['userchk']);
 		if(!isset($passw) || $usernum == "0") {
 			if($usernum == "1") {
-				?><b>Error</b><br><br>
-				The username you entered is currently reserved.  To post with this username, please enter a password below:<br>
+				?><b><?=L("Error")?></b><br><br>
+				<?=L("The username you entered is currently reserved.  To post with this username, please enter a password below:")?><br>
 				<div align="center"><form method="post" action="<?=$_SERVER['PHP_SELF']?>"><input type="password" name="passw">
 				<input type="hidden" name="name" value="<?=htmlspecialchars($name ?? "", ENT_QUOTES)?>">
 				<input type="hidden" name="email" value="<?=htmlspecialchars($email ?? "", ENT_QUOTES)?>">
 				<input type="hidden" name="comment" value="<?=htmlspecialchars($comment ?? "", ENT_QUOTES)?>">
 				<input type="hidden" name="a" value="<?=$a?>">
 				<input type="hidden" name="post" value="comment">
-				<input type="submit" value="Submit">
+				<input type="submit" value="<?=L("Submit")?>">
 				</form></div><?php 
 			} else {
 				// Post comment 
-				if(empty($name) || empty($email) || empty($comment)) { print("Please fill-in all fields.  All fields are required to post a comment.<p>");
+				if(empty($name) || empty($email) || empty($comment)) { print L("Please fill-in all fields.  All fields are required to post a comment.") . "<p>";
 				} else {
 					$q['ins_com'] = mysql_query("INSERT INTO $t_coms (id, news_id, name, email, comment, date, ip) VALUES ('', '$a', '$name_esc', '$email_esc', '$comment_esc', '$now', '{$_SERVER['REMOTE_ADDR']}')", $link) or E("Couldn't insert new comment:<br>" . mysql_error());
-					print "Your comment has been added.<br>[ <a href=\"{$_SERVER['PHP_SELF']}?a=$a\">&lt;&lt; Go Back</a> ]<br><br>";
+					print L("Your comment has been added.") . "<br>[ <a href=\"{$_SERVER['PHP_SELF']}?a=$a\">&lt;&lt; " . L("Go Back") . "</a> ]<br><br>";
 				}
 			}
 		} else {
@@ -52,9 +52,9 @@ if(isset($a)) {
 			if(mysql_num_rows($q['userchk']) == "1") {
 				// Post comment with protected username 
 				$q['ins_com'] = mysql_query("INSERT INTO $t_coms (id, news_id, name, email, comment, date, ip) VALUES ('', '$a', '$name_esc', '$email_esc', '$comment_esc', '$now', '{$_SERVER['REMOTE_ADDR']}')", $link) or E("Couldn't insert new comment:<br>" . mysql_error());
-				print "You comment has been added.<br>[ <a href=\"{$_SERVER['PHP_SELF']}?a=$a\">&lt;&lt; Go Back</a> ]<br><br>";
+				print L("You comment has been added.") . "<br>[ <a href=\"{$_SERVER['PHP_SELF']}?a=$a\">&lt;&lt; " . L("Go Back") . "</a> ]<br><br>";
 			} else {
-				print "The password you entered was incorrect.<br>[ <a href=\"javascript:history.go(-1)\">&lt;&lt; Go Back</a> ]<br><br>";
+				print L("The password you entered was incorrect.") . "<br>[ <a href=\"javascript:history.go(-1)\">&lt;&lt; " . L("Go Back") . "</a> ]<br><br>";
 			}
 		}
 		
@@ -84,7 +84,7 @@ if(isset($a)) {
 	
 	if($catnum > "1" && $set['catbox'] == "on") { ?>
 		<table width="90%" border="0" cellspacing="0" cellpadding="0"><tr>
-		<td align="left"><b>View news posted in category:</b></td>
+		<td align="left"><b><?=L("View news posted in category:")?></b></td>
 		<td align="right"><?php  print catBox("c","$c","yes","news"); ?></td>
 		</tr></table><br>
 		<?php 
@@ -111,7 +111,7 @@ if(isset($q['info'])) { // $q['info'] check
 		if($r['sumstory'] == "on" && isset($a)) { 
 			$output = str_replace("{news}", "{$r['content']}<p>{$r['content2']}", $output);
 		} elseif($r['sumstory'] == "on") {
-			$r['content'] .= "<p><small><a href=\"" . $_SERVER['PHP_SELF'] . "?a={$r['id']}\">Read More...</a></small>";
+			$r['content'] .= "<p><small><a href=\"" . $_SERVER['PHP_SELF'] . "?a={$r['id']}\">" . L("Read More...") . "</a></small>";
 			$output = str_replace("{news}", "{$r['content']}", $output);
 		} else {
 			$output = str_replace("{news}", "{$r['content']}", $output);
@@ -163,13 +163,13 @@ if(isset($q['info'])) { // $q['info'] check
 			$q['comsn'] = mysql_query("SELECT id FROM $t_coms WHERE news_id = '{$r['id']}' ORDER BY date ASC", $link) or E("Couldn't select comments for current news article:<br>" . mysql_error());
 			$comsnum = mysql_num_rows($q['comsn']);
 			if(empty($set['coms_text'])) {
-				$output = str_replace("{comments}", "<a href=\"" . $_SERVER['PHP_SELF'] . "?a={$r['id']}\"><small>View/Post Comments ($comsnum)</small></a>", $output);
+				$output = str_replace("{comments}", "<a href=\"" . $_SERVER['PHP_SELF'] . "?a={$r['id']}\"><small>" . L("View/Post Comments") . " ($comsnum)</small></a>", $output);
 			} else {
 				$setcoms_text = str_replace("{cnum}", "$comsnum", $set['coms_text']);
 				$output = str_replace("{comments}", "<a href=\"" . $_SERVER['PHP_SELF'] . "?a={$r['id']}\"><small>$setcoms_text</small></a>", $output);
 			}
 		} elseif($set['comments'] == "on") {
-			$output = str_replace("{comments}", "<small>[ <a href=\"" . $_SERVER['PHP_SELF'] . "\">&lt;&lt; Return to News Page</a> ]</small>", $output);
+			$output = str_replace("{comments}", "<small>[ <a href=\"" . $_SERVER['PHP_SELF'] . "\">&lt;&lt; " . L("Return to News Page") . "</a> ]</small>", $output);
 		} else {
 			$output = str_replace("{comments}", "", $output);
 		}
@@ -203,7 +203,7 @@ if(isset($q['info'])) { // $q['info'] check
 		if($comsnum != "0") {
 			?>
 			<hr size="1" width="95%">
-			<b>Comments: (<?=$comsnum?> total)</b><br>
+			<b><?=L("Comments")?>: (<?=$comsnum?> <?=L("total")?>)</b><br>
 			<?php 
 			while ($c = mysql_fetch_array($q['coms'], MYSQL_ASSOC)) {
 				$c_name = htmlspecialchars($c['name'], ENT_QUOTES);
@@ -211,23 +211,23 @@ if(isset($q['info'])) { // $q['info'] check
 				$c_comment = htmlspecialchars($c['comment'], ENT_QUOTES);
 				print "
 				<br>\n
-				<b>Name:</b> {$c_name}<br>\n
-				<b>Email:</b> {$c_email}<br>\n
-				<b>Comments:</b> {$c_comment}<br>\n
-				" . ($com_admin ? "<small>[ <a href=\"dpost.php?a={$c['id']}&n=$a\">delete</a> ]</small><br>\n" : "") . "
+				<b>" . L("Name") . ":</b> {$c_name}<br>\n
+				<b>" . L("Email") . ":</b> {$c_email}<br>\n
+				<b>" . L("Comments") . ":</b> {$c_comment}<br>\n
+				" . ($com_admin ? "<small>[ <a href=\"dpost.php?a={$c['id']}&n=$a\">" . L("delete") . "</a> ]</small><br>\n" : "") . "
 				<br>\n
 				";
 			}
 		}
 		?>
 		<hr size="1" width="95%">
-		<b>Post a Comment</b><br><br>
+		<b><?=L("Post a Comment")?></b><br><br>
 		<table border="0" cellpadding="1" cellspacing="0">
 		<form method="post" action="<?=$_SERVER['PHP_SELF']?>">
-		<tr><td><b>Name:</b></td><td><input type="text" name="name"></td></tr>
-		<tr><td><b>Email:</b></td><td><input type="text" name="email"></td></tr>
-		<tr><td><b>Comment:</b></td><td><textarea rows="4" cols="30" name="comment"></textarea></td></tr>
-		<tr><td>&nbsp;</td><td><input type="submit" value="Add Comment"></td></tr>
+		<tr><td><b><?=L("Name")?>:</b></td><td><input type="text" name="name"></td></tr>
+		<tr><td><b><?=L("Email")?>:</b></td><td><input type="text" name="email"></td></tr>
+		<tr><td><b><?=L("Comment")?>:</b></td><td><textarea rows="4" cols="30" name="comment"></textarea></td></tr>
+		<tr><td>&nbsp;</td><td><input type="submit" value="<?=L("Add Comment")?>"></td></tr>
 		<input type="hidden" name="a" value="<?=$a?>">
 		<input type="hidden" name="post" value="comment">
 		</form>

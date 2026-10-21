@@ -18,8 +18,10 @@ if($go == "true") {
 if($demo == "on") { print S("This would normally update and save the changes you have made in the configuration table."); }
 ### Save changes into DB
 $sitename = addslashes($sitename);
-$q['update'] = mysql_query("UPDATE $t_conf SET sitename='$sitename', siteurl='$siteurl', scripturl='$scripturl', newslimit='$newslimit', timezone='$timezone', dateform='$dateform', output='$output', source='$source', author='$author', coms_text='$coms_text', words='$words', comments='$comments', search='$search', pages='$pages', catbox='$catbox'", $link) or E("Could not update news configurations:<br>" . mysql_error());
-echo S("News configurations have been updated");
+$lang = addslashes($lang);
+$logo = addslashes($logo);
+$q['update'] = mysql_query("UPDATE $t_conf SET sitename='$sitename', siteurl='$siteurl', scripturl='$scripturl', newslimit='$newslimit', timezone='$timezone', dateform='$dateform', output='$output', source='$source', author='$author', coms_text='$coms_text', lang='$lang', logo='$logo', words='$words', comments='$comments', search='$search', pages='$pages', catbox='$catbox'", $link) or E("Could not update news configurations:<br>" . mysql_error());
+echo S(L("News configurations have been updated"));
 }
 }
 
@@ -50,7 +52,7 @@ $confnum = mysql_result($q['chk'],0,"COUNT(*)");
 
 if($confnum != "1") {
 $q['del'] = mysql_query("DELETE FROM $t_conf", $link) or E("Could not clear configuration settings:<br>" . mysql_error());
-$q['prep'] = mysql_query("INSERT INTO $t_conf (sitename, siteurl, scripturl, newslimit, timezone, dateform, output, source, author, coms_text, version, words, comments, search, pages, catbox) VALUES ('', 'http://{$_SERVER['HTTP_HOST']}/', 'http://{$_SERVER['HTTP_HOST']}$rtpath', '15', '$servtime', 'M d, Y', '$defoutput', '$setsource', '$setauthor', '$setcoms', '$cnver', 'on', 'on', 'on', 'on', 'on')", $link) or E("Could not prepare configuration settings:<br>" . mysql_error());
+$q['prep'] = mysql_query("INSERT INTO $t_conf (sitename, siteurl, scripturl, newslimit, timezone, dateform, output, source, author, coms_text, version, lang, logo, words, comments, search, pages, catbox) VALUES ('', 'http://{$_SERVER['HTTP_HOST']}/', 'http://{$_SERVER['HTTP_HOST']}$rtpath', '15', '$servtime', 'M d, Y', '$defoutput', '$setsource', '$setauthor', '$setcoms', '$cnver', 'en', '', 'on', 'on', 'on', 'on', 'on')", $link) or E("Could not prepare configuration settings:<br>" . mysql_error());
 }
 $q['edit'] = mysql_query("SELECT * FROM $t_conf LIMIT 1", $link) or E("Could not retieve configuration settings:<br>" . mysql_error());
 $ev = mysql_fetch_array($q['edit'], MYSQL_ASSOC);
@@ -77,6 +79,20 @@ Website URL:
 HTTP path to CzarNews:
 </td><td bgcolor="<?php  print $MenuBg1; ?>">
 <input type="text" name="scripturl" size="35" class="input" value="<?=$ev['scripturl']?>">
+</td></tr>
+<tr><td bgcolor="<?php  print $MenuBg2; ?>" nowrap>
+<?=L("Language")?>:
+</td><td bgcolor="<?php  print $MenuBg1; ?>">
+<select name="lang">
+<option value="en"<?php if($ev['lang'] == "en") { print " SELECTED"; } ?>>English</option>
+<option value="de"<?php if($ev['lang'] == "de") { print " SELECTED"; } ?>>Deutsch</option>
+</select>
+</td></tr>
+<tr><td bgcolor="<?php  print $MenuBg2; ?>" nowrap>
+<?=L("Logo")?>:
+</td><td bgcolor="<?php  print $MenuBg1; ?>">
+<input type="text" name="logo" size="35" class="input" value="<?=htmlspecialchars($ev['logo'], ENT_QUOTES)?>"><br>
+<small><?=L("Logo URL (shown in the admin header; leave empty for default)")?></small>
 </td></tr>
 <tr><td bgcolor="<?php  print $MenuBg2; ?>" nowrap>
 News per page:
@@ -155,8 +171,8 @@ Additional Options:
 </td><td bgcolor="<?php  print $MenuBg1; ?>">
 <input type="hidden" name="op" value="edit">
 <input type="hidden" name="go" value="true">
-<input type="submit" name="submit" value="Save Settings" class="input">&nbsp;&nbsp;
-<input type="button" name="cancel" value="Cancel" class="input" onClick="javascript:location.href='<?=$_SERVER['PHP_SELF']?>'">
+<input type="submit" name="submit" value="<?=L("Save Settings")?>" class="input">&nbsp;&nbsp;
+<input type="button" name="cancel" value="<?=L("Cancel")?>" class="input" onClick="javascript:location.href='<?=$_SERVER['PHP_SELF']?>'">
 </td></tr>
 </table><br>
 </form>

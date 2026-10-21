@@ -1,6 +1,6 @@
 ##########################################
 ### 
-### CzarNews v2.0 MySQL Table Structures
+### CzarNews v2.1 MySQL Table Structures
 ### Made by: Czaries  [czaries@czaries.net]
 ### http://www.czaries.net/scripts/
 ### for more scripts and updates.
@@ -52,6 +52,8 @@ CREATE TABLE `cn_config` (
   `author` varchar(255) NOT NULL default '',
   `coms_text` varchar(255) NOT NULL default '',
   `version` varchar(255) NOT NULL default '',
+  `lang` varchar(10) NOT NULL default 'en',
+  `logo` varchar(255) NOT NULL default '',
   `words` enum('on','off') NOT NULL default 'on',
   `comments` enum('on','off') NOT NULL default 'on',
   `search` enum('on','off') NOT NULL default 'on',

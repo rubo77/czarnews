@@ -42,7 +42,6 @@ mail("{$inf['email']}", "$subject", "$msg", $headers) or E("Could not email pass
 echo S("Password notification email has been sent");
 exit;
 }
-$button_txt = "Send Password";
 ?>
 
 <table width="100%" border="0" cellspacing="0" cellpadding="5">
@@ -50,12 +49,12 @@ $button_txt = "Send Password";
 		<td valign="top">
 <form method="post" action="<?php  echo $_SERVER['PHP_SELF']; ?>" name="theform">
 <table  width="100%" border="0" cellspacing="1" cellpadding="2" align="center"><tr><td nowrap>
-<b>Forgot Password</b>
+<b><?=L("Forgot Password")?></b>
 </td><td>
 <hr size="2" color="#000000" width="100%">
 </td></tr>
 <tr><td bgcolor="<?php  print $MenuBg2; ?>">
-Email:
+<?=L("Email")?>:
 </td><td bgcolor="<?php  print $MenuBg1; ?>">
 <input type="text" name="email" class="input" value="">
 </td></tr>
@@ -65,7 +64,7 @@ Email:
 <input type="hidden" name="op" value="<?=$op?>">
 <input type="hidden" name="id" value="<?=$id?>">
 <input type="hidden" name="go" value="true">
-<input type="submit" name="submit" value="<?=$button_txt?>" class="input">
+<input type="submit" name="submit" value="<?=L("Send Password")?>" class="input">
 </td></tr>
 </table>
 		</td>

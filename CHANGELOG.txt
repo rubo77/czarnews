@@ -1,7 +1,33 @@
 <?
 /*
 CHANGELOG
-CzarNews 1.12
+
+v2.1 (2026-10-22)
+-----------------
+- Language selection in the site settings (English/German). UI strings go
+  through L() with English keys; translations live in lang/<code>.php.
+- Configurable admin logo: "Logo URL" in the site settings replaces the
+  bundled cn_logo_l.gif when set; empty keeps the default.
+- Schema: cn_config gains `lang` and `logo` columns; cn_config.php adds
+  them automatically on first run for older installs.
+
+v2.0 (2026-10-22) - PHP 8.x port by eclabs.de
+------------------------------------------------
+- Ported to PHP 8.x/9-ready: removed `each()`, `split()`, `ereg()`,
+  `$HTTP_*_VARS`, `session_register()`, `mysql_*` via compatibility shims,
+  PHP4 constructors, unquoted constants, `create_function()`.
+- Security fixes for the known public exploits:
+  - RFI via user-controlled $tpath include path (CVE-2005-0859,
+    CVE-2006-3685): tpath is no longer accepted from the request.
+  - SQL injection in login (usern/passw), search (s) and article/comment
+    ids (CVE-2006-1641): escaped input + int casts.
+  - Stored XSS in comment name/email/comment fields (CVE-2006-1640):
+    htmlspecialchars() on output and on the reserved-name repost fields.
+- Re-implemented the v1.14 comment-deletion feature as dpost.php with
+  proper admin/news authorization and integer ids.
+- Modernized admin add/edit form (clean submit button).
+
+CzarNews 1.12 (original, 2004-03-07)
 
 Created file 'cn_words.php'
 Created table 'cn_words'

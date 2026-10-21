@@ -9,27 +9,27 @@ include_once("cn_head.php");
 		<td valign="top">
 <form method="post" action="index.php">
 <table width="95%" border="0" cellspacing="0" cellpadding="4" align="center"><tr><td nowrap>
-<b>User Login</b>
+<b><?=L("User Login")?></b>
 </td><td>
 <hr size="2" color="#000000" width="100%">
 </td></tr><tr><td class="name">
-Username:
+<?=L("Username")?>:
 </td><td>
 <input class="input" type="text" name="usern" value="">
 </td></tr><tr><td class="name">
-Password:
+<?=L("Password")?>:
 </td><td>
 <input class="input" type="password" name="passw" value="">
 </td></tr><tr><td class="name">
 &nbsp;
 </td><td>
-<input type="submit" name="submit" value="Login" class="input">
+<input type="submit" name="submit" value="<?=L("Login")?>" class="input">
 </td></tr>
 </table>
 		</td>
 		<td valign="top"><br>
-This is an admin area that is restricted to authorized users only.  Please login with your username and password.<br>
-<a href="fpass.php">Forget your password?</a>
+<?=L("This is an admin area that is restricted to authorized users only.  Please login with your username and password.")?><br>
+<a href="fpass.php"><?=L("Forget your password?")?></a>
 		</td>
 	</tr></form>
 </table>

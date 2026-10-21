@@ -22,27 +22,27 @@ if($go == "true") {
 $time = strtotime("now");
 $content = addslashes($content);
 if(!isset($cat)) { $cat = 0; }
-if(empty($subject) || empty($content)) { print E("You have not filled in a subject and/or content for your news post"); }
-if(!in_array($cat, $ucats) && $useri['categories'] != "all") { print E("You are not allowed to add news posts out of your category permisions"); }
+if(empty($subject) || empty($content)) { print E(L("You have not filled in a subject and/or content for your news post")); }
+if(!in_array($cat, $ucats) && $useri['categories'] != "all") { print E(L("You are not allowed to add news posts out of your category permisions")); }
 $q['add'] = mysql_query ("INSERT INTO $t_news (id, author, cat, subject, content, content2, sumstory, date, source, sourceurl) VALUES ('', '{$useri['id']}', '$cat', '$subject', '$content', '$content2', '$sumstory', '$time', '$source', '$sourceurl')", $link) or E("Could not insert news:<br>" . mysql_error());
 
-echo S("New news has been added");
+echo S(L("New news has been added"));
 exit;
 }
 } elseif($op == "edit") {
 $q['edit'] = mysql_query("SELECT * FROM $t_news WHERE id = '$id'", $link) or E("Couldn't retieve news info:<br>" . mysql_error());
 $ev = mysql_fetch_array($q['edit'], MYSQL_ASSOC);
-if(!in_array($ev['cat'], $ucats) && $useri['categories'] != "all") { print E("You are not allowed to edit news posts out of your category permisions"); }
-if($useri['news'] != "on" && $useri['id'] != $ev['id']) { print E("You are only allowed to edit your own news items"); }
+if(!in_array($ev['cat'], $ucats) && $useri['categories'] != "all") { print E(L("You are not allowed to edit news posts out of your category permisions")); }
+if($useri['news'] != "on" && $useri['id'] != $ev['id']) { print E(L("You are only allowed to edit your own news items")); }
 
 if($go == "true") {
 // Check if subject and content is filled-in 
-if(empty($subject) || empty($content)) { print E("You have not filled in a subject and/or content for your news post"); }
+if(empty($subject) || empty($content)) { print E(L("You have not filled in a subject and/or content for your news post")); }
 ### Save changes into DB
 $news = addslashes($news);
 $context = addslashes($context);
 $q['update'] = mysql_query ("UPDATE $t_news SET cat='$cat', subject='$subject', content='$content', content2='$content2', sumstory='$sumstory', source='$source', sourceurl='$sourceurl' WHERE id = '$id'", $link) or E("Could not update news:<br>" . mysql_error());
-echo S("News has been edited");
+echo S(L("News has been edited"));
 exit;
 }
 } elseif($op == "del") {
@@ -50,27 +50,27 @@ exit;
 ### Fetch info about record
 $q['del'] = mysql_query("SELECT * FROM $t_news WHERE id = '$id'", $link) or E("Couldn't select news:<br>" . mysql_error());
 $dv = mysql_fetch_array($q['del'], MYSQL_ASSOC);
-if(!in_array($dv['cat'], $ucats) && $useri['categories'] != "all") { print E("You are not allowed to delete news posts out of your category permisions"); }
-if($useri['news'] != "on" && $useri['id'] != $dv['id']) { print E("You are only allowed to delete your own news items"); }
+if(!in_array($dv['cat'], $ucats) && $useri['categories'] != "all") { print E(L("You are not allowed to delete news posts out of your category permisions")); }
+if($useri['news'] != "on" && $useri['id'] != $dv['id']) { print E(L("You are only allowed to delete your own news items")); }
 if($go == "true") {
 ### Delete news record
 $q['del'] = mysql_query("DELETE FROM $t_news WHERE id = '$id'", $link) or E("Couldn't delete news:<br>" . mysql_error());
 $q['del2'] = mysql_query("DELETE FROM $t_coms WHERE news_id = '$id'", $link) or E("Couldn't delete comments:<br>" . mysql_error());
-echo S("News item has been deleted");
+echo S(L("News item has been deleted"));
 exit;
 }
 ?>
 <form method="post" action="<?php  echo $_SERVER['PHP_SELF']; ?>" name="theform">
-Are you sure you want to delete "<b><?=$dv['subject']?></b>"?<br><br>
+<?=L("Are you sure you want to delete")?> "<b><?=$dv['subject']?></b>"?<br><br>
 <input type="hidden" name="op" value="<?=$op?>">
 <input type="hidden" name="id" value="<?=$id?>">
 <input type="hidden" name="go" value="true">
-<input type="submit" name="submit" value="Yes" class="input">&nbsp;&nbsp;<input type="button" onClick="javascript:location.href='<?=$_SERVER['PHP_SELF']?>'" value="No" class="input">
+<input type="submit" name="submit" value="<?=L("Yes")?>" class="input">&nbsp;&nbsp;<input type="button" onClick="javascript:location.href='<?=$_SERVER['PHP_SELF']?>'" value="<?=L("No")?>" class="input">
 <?php 
 exit;
 ### Do an action to multiple 
 } elseif($op == "multi") {
-if(empty($item)) { print E("You must check at least one item"); }
+if(empty($item)) { print E(L("You must check at least one item")); }
 if($mode == "move") {
 if($go == "true") {
 foreach($item as $id => $t) {
@@ -87,16 +87,16 @@ $movs .= "$t<br>\n";
 }
 }
 ### Delete news record
-echo S("The following news items have been moved:<br><br>" . $movs);
+echo S(L("The following news items have been moved:") . "<br><br>" . $movs);
 exit;
 }
 ?>
 <form method="post" action="<?php  echo $_SERVER['PHP_SELF']; ?>" name="theform">
-Which category do you want to move these items to?<br><br>
+<?=L("Move selected items to category:")?><br><br>
 
 <table  width="100%" border="0" cellspacing="1" cellpadding="2" align="center">
 <tr><td bgcolor="<?php  print $MenuBg2; ?>">
-Category:
+<?=L("Category")?>:
 </td><td bgcolor="<?php  print $MenuBg1; ?>">
 <?php  print catBox("cat","{$ev['cat']}"); ?>
 </td></tr>
@@ -112,7 +112,7 @@ print "<b>$t</b><br><input type=\"hidden\" name=\"item[$id]\" value=\"$t\">\n";
 <input type="hidden" name="op" value="<?=$op?>">
 <input type="hidden" name="mode" value="<?=$mode?>">
 <input type="hidden" name="go" value="true">
-<input type="submit" name="submit" value="Move Items" class="input">&nbsp;&nbsp;<input type="button" onClick="javascript:location.href='<?=$_SERVER['PHP_SELF']?>'" value="Cancel" class="input">
+<input type="submit" name="submit" value="<?=L("Move Items")?>" class="input">&nbsp;&nbsp;<input type="button" onClick="javascript:location.href='<?=$_SERVER['PHP_SELF']?>'" value="<?=L("Cancel")?>" class="input">
 <?php 
 exit;
 } elseif($mode == "del") {
@@ -132,12 +132,12 @@ $dels .= "$t<br>\n";
 }
 }
 ### Delete news record
-echo S("The following news items have been deleted:<br><br>" . $dels);
+echo S(L("The following news items have been deleted:") . "<br><br>" . $dels);
 exit;
 }
 ?>
 <form method="post" action="<?php  echo $_SERVER['PHP_SELF']; ?>" name="theform">
-Are you sure you want to delete these items?<br><br>
+<?=L("Are you sure you want to delete these items?")?><br><br>
 <?php 
 foreach($item as $id => $t) {
 print "<b>$t</b><br><input type=\"hidden\" name=\"item[$id]\" value=\"$t\">\n";
@@ -147,7 +147,7 @@ print "<b>$t</b><br><input type=\"hidden\" name=\"item[$id]\" value=\"$t\">\n";
 <input type="hidden" name="op" value="<?=$op?>">
 <input type="hidden" name="mode" value="<?=$mode?>">
 <input type="hidden" name="go" value="true">
-<input type="submit" name="submit" value="Yes" class="input">&nbsp;&nbsp;<input type="button" onClick="javascript:location.href='<?=$_SERVER['PHP_SELF']?>'" value="No" class="input">
+<input type="submit" name="submit" value="<?=L("Yes")?>" class="input">&nbsp;&nbsp;<input type="button" onClick="javascript:location.href='<?=$_SERVER['PHP_SELF']?>'" value="<?=L("No")?>" class="input">
 <?php 
 exit;
 }
@@ -157,29 +157,29 @@ exit;
 <form method="post" action="<?php  echo $_SERVER['PHP_SELF']; ?>" name="theform">
 <table  width="100%" border="0" cellspacing="1" cellpadding="2" align="center">
 <tr><td bgcolor="<?php  print $MenuBg2; ?>">
-Author:
+<?=L("Author")?>:
 </td><td bgcolor="<?php  print $MenuBg1; ?>">
 <b><?php  if(empty($ev['author'])) { print $useri['user']; } else { print getinfo($ev['author']); } ?></b>
 </td></tr>
 <tr><td bgcolor="<?php  print $MenuBg2; ?>">
-Category:
+<?=L("Category")?>:
 </td><td bgcolor="<?php  print $MenuBg1; ?>">
 <?php  print catBox("cat","{$ev['cat']}"); ?>
 </td></tr>
 <tr><td bgcolor="<?php  print $MenuBg2; ?>">
-Subject:
+<?=L("Subject")?>:
 </td><td bgcolor="<?php  print $MenuBg1; ?>">
 <input type="text" name="subject" size="35" class="input" value="<?=stripslashes($ev['subject'])?>">
 </td></tr>
 <tr><td bgcolor="<?php  print $MenuBg2; ?>">
-Content:
+<?=L("Content")?>:
 </td><td bgcolor="<?php  print $MenuBg1; ?>">
 <textarea cols="40" rows="6" name="content" class="input"><?=stripslashes($ev['content'])?></textarea>
 </td></tr>
 <tr><td bgcolor="<?php  print $MenuBg2; ?>">
-Entire Story:
+<?=L("Entire Story")?>:
 </td><td bgcolor="<?php  print $MenuBg1; ?>">
-<input type="checkbox" name="sumstory" id="sumstory" onClick="openBox(1);"<?php  if($ev['sumstory'] == "on") { print " CHECKED"; } ?>> <label for="sumstory">Use summary/entire story feature</label><br>
+<input type="checkbox" name="sumstory" id="sumstory" onClick="openBox(1);"<?php  if($ev['sumstory'] == "on") { print " CHECKED"; } ?>> <label for="sumstory"><?=L("Use summary/entire story feature")?></label><br>
 <div id="box1" style="display: <?php  if($ev['sumstory'] == "on") { print "block"; } else { print "none"; } ?>">
 <textarea cols="40" rows="6" name="content2" class="input"><?=stripslashes($ev['content2'])?></textarea>
 </div>
@@ -187,15 +187,15 @@ Entire Story:
 <tr><td bgcolor="<?php  print $MenuBg2; ?>">
 &nbsp;
 </td><td bgcolor="<?php  print $MenuBg1; ?>">
-If you got your news from somewhere else, you can cite the source below.  Otherwise, leave both fields blank.
+<?=L("If you got your news from somewhere else, you can cite the source below.  Otherwise, leave both fields blank.")?>
 </td></tr>
 <tr><td bgcolor="<?php  print $MenuBg2; ?>" nowrap>
-Source Name:
+<?=L("Source Name")?>:
 </td><td bgcolor="<?php  print $MenuBg1; ?>">
 <input type="text" name="source" size="25" class="input" value="<?=$ev['source']?>">
 </td></tr>
 <tr><td bgcolor="<?php  print $MenuBg2; ?>">
-Source URL:
+<?=L("Source URL")?>:
 </td><td bgcolor="<?php  print $MenuBg1; ?>">
 <input type="text" name="sourceurl" size="35" class="input" value="<?=$ev['sourceurl']?>">
 </td></tr>
@@ -205,7 +205,7 @@ Source URL:
 <input type="hidden" name="op" value="<?=$op?>">
 <input type="hidden" name="id" value="<?=$id?>">
 <input type="hidden" name="go" value="true">
-<input type="submit" name="submit" value="Abschicken" class="input">
+<input type="submit" name="submit" value="<?=L("Submit")?>" class="input">
 </td></tr>
 </table><br>
 
@@ -228,9 +228,9 @@ $q['count'] = mysql_query("SELECT id FROM $t_news", $link) or E( "Couldn't count
 while ($num = mysql_fetch_array($q['count'], MYSQL_ASSOC)) {
 if(in_array($num['cat'], $ucats) || $useri['categories'] == "all") { $newsnum++; }
 }
-print "<b>$newsnum</b> News Article(s) Found<br><br><a href=\"?op=add\">[ Add News ]</a> or click on a news article below to edit";
+print "<b>$newsnum</b> " . L("News Article(s) Found") . "<br><br><a href=\"?op=add\">[ " . L("Add News") . " ]</a> " . L("or click on a news article below to edit");
 if($newsnum == "0") {
-print "<br><br>No news found in database";
+print "<br><br>" . L("No news found in database");
 }
 ?>
 <table border="0" cellpadding="1" cellspacing="1" width="100%" align="center">
@@ -242,7 +242,7 @@ if(in_array($r['cat'], $ucats) || $useri['categories'] == "all") {
 $q['cinfo'] = mysql_query("SELECT name FROM $t_cats WHERE id='{$r['cat']}'", $link);
 $inf = mysql_fetch_array($q['cinfo'], MYSQL_ASSOC);
 ?>
-<tr><td bgcolor="#EEEEEE"><input type="checkbox" name="item[<?=$r['id']?>]" value="<?=cutstr($r['subject'])?>"></td><td bgcolor="#EEEEEE" width="60%">&nbsp;<a href="?op=edit&id=<?=$r['id']?>"><b><?php  echo cutstr($r['subject']); ?></b></a></td><td bgcolor="#EEEEEE">&nbsp;<?=$inf['name']?>&nbsp;</td><td bgcolor="#EEEEEE" width="20%" align="right" nowrap>&nbsp;<?php  echo date("M d, Y",$r['date']); ?>&nbsp;</td><td><a href="?op=del&id=<?=$r['id']?>">[Delete]</a></td></tr>
+<tr><td bgcolor="#EEEEEE"><input type="checkbox" name="item[<?=$r['id']?>]" value="<?=cutstr($r['subject'])?>"></td><td bgcolor="#EEEEEE" width="60%">&nbsp;<a href="?op=edit&id=<?=$r['id']?>"><b><?php  echo cutstr($r['subject']); ?></b></a></td><td bgcolor="#EEEEEE">&nbsp;<?=$inf['name']?>&nbsp;</td><td bgcolor="#EEEEEE" width="20%" align="right" nowrap>&nbsp;<?php  echo date("M d, Y",$r['date']); ?>&nbsp;</td><td><a href="?op=del&id=<?=$r['id']?>">[<?=L("Delete")?>]</a></td></tr>
 <?php 
 $i++;
 }
@@ -252,15 +252,15 @@ $i++;
 <?php  if($newsnum != "0") { ?>
 <table border="0" cellpadding="0" cellspacing="2">
 <tr><td>
-With Selected:&nbsp;&nbsp;
+<?=L("With selected:")?>&nbsp;&nbsp;
 </td><td>
 <input type="hidden" name="op" value="multi">
 <select name="mode">
-<option value="move">Move</option>
-<option value="del">Delete</option>
+<option value="move"><?=L("Move")?></option>
+<option value="del"><?=L("Delete")?></option>
 </select>
 </td><td>
-<input type="submit" name="submit" value="Submit" class="input">
+<input type="submit" name="submit" value="<?=L("Go")?>" class="input">
 </td></tr>
 </table>
 <?php  } ?>

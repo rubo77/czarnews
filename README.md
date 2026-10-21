@@ -1,4 +1,4 @@
-# CzarNews v2.0 — PHP 8.x Port
+# CzarNews v2.1 — PHP 8.x Port
 
 A maintained fork of **CzarNews v1.12** (released 2004-03-07 by Vance Lucas,
 originally czaries.net — long offline), modernized to run cleanly on
@@ -29,10 +29,25 @@ web admin panel. No framework, no dependencies — plain PHP + MySQL.
 - **Web configuration** — site name/URLs, items per page, date format,
   timezone offset, output/source/author templates, feature switches
   (search, comments, category box, pagination)
+- **Language selection** — admin panel + public news page in English or
+  German, switchable in the web configuration (lang/en.php, lang/de.php;
+  untranslated strings fall back to English). Easy to extend with more
+  languages
+- **Configurable admin logo** — logo URL in the web configuration
+  replaces the bundled header logo
 - **Forgot-password flow** — `fpass.php` mails credentials to the user's
   registered address
 - **MySQL backend** — schema in `czarnews.sql` (originally `TYPE=MyISAM`;
   convert to `ENGINE=MyISAM`/`InnoDB` on modern MariaDB)
+
+### Changes in v2.1
+
+- language selection (en/de) for the admin panel and public news page,
+  configured in the site settings; new `lang/` directory with string
+  maps and an `L()` helper
+- configurable header logo via site settings (`logo` column)
+- `cn_config` schema gains `lang` + `logo` columns — added
+  automatically on first run for existing installs, no manual migration
 
 ### PHP 8.x modernization (v2.0)
 
@@ -74,6 +89,8 @@ All known CVEs are fixed:
 - `headlines.php` — embeddable latest-headlines snippet
 - `cn_*.php` — admin sections (users, categories, words, config, code
   generator)
+- `lang/` — language files (`en.php`, `de.php`); add a `<code>.php` map
+  there and it shows up as a language option
 - `czarnews.sql` — database schema
 
 ## License

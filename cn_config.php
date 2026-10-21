@@ -2,13 +2,13 @@
 require_once(__DIR__."/includes/php7_fix.inc.php");
 ##########################################
 ### 
-### CzarNews v2.0
+### CzarNews v2.1
 ### Made by: Czaries  [czaries@czaries.net]
 ### http://www.czaries.net/scripts/
 ### for more scripts and updates.
 ###
 ### Current Version, do not alter or script will not install right
-$cnver = "2.0";
+$cnver = "2.1";
 ##########################################
 
 // $tpath ist in news.php im czarnews ordner definiert
@@ -59,6 +59,23 @@ $set = mysql_fetch_array($q['sets'], MYSQL_ASSOC);
 if($cnver > $set['version']) {
 include ($tpath . "install.php");
 exit;
+}
+
+// v2.1: language + logo settings; older installs get the columns
+// added here so no manual schema migration is needed
+if($set && !isset($set['lang'])) {
+mysql_query("ALTER TABLE $t_conf ADD COLUMN `lang` VARCHAR(10) NOT NULL DEFAULT 'en', ADD COLUMN `logo` VARCHAR(255) NOT NULL DEFAULT ''", $link);
+$set['lang'] = 'en';
+$set['logo'] = '';
+}
+
+// L() translates an English source string via lang/<lang>.php;
+// untranslated strings fall back to the English source text
+$CN_LANG = array();
+$cn_lang = (isset($set['lang']) && file_exists(dirname(__FILE__)."/lang/{$set['lang']}.php")) ? $set['lang'] : 'en';
+include_once(dirname(__FILE__)."/lang/$cn_lang.php");
+function L($s) {
+return $GLOBALS['CN_LANG'][$s] ?? $s;
 }
 
 // User functions

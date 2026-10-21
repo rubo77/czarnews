@@ -134,6 +134,38 @@ admin "Code Generator" page produces ready-made snippets.
   there and it shows up as a language option
 - `czarnews.sql` — database schema
 
+## Looking for CzarNews v1.12 / v1.13 / v1.14?
+
+If you are running **CzarNews v1.12**, **CzarNews v1.13**, **CzarNews v1.13b**, or **CzarNews v1.14** and need a secure update — this is it.
+This fork is a drop-in replacement for the original CzarNews by Vance
+Lucas (czaries.net, offline since ~2006) and fixes every publicly known
+exploit while running on modern PHP 8.x:
+
+- **Fix for CzarNews `tpath` remote file inclusion** (CVE-2005-0859,
+  CVE-2006-3685) — the `tpath` parameter could be pointed at a remote
+  URL to execute arbitrary code. Vulnerable entry points:
+  `news.php`, `headlines.php`, `dpost.php`, `cn_config.php`,
+  `cn_head.php`.
+- **Fix for CzarNews SQL injection** (CVE-2006-1641) — exploitable via
+  the `usern`/`passw` login fields in `cn_auth.php` / `login.php`, the
+  `s` search parameter in `news.php`, and the `a` parameter in
+  `dpost.php`.
+- **Fix for CzarNews stored XSS** (CVE-2006-1640) — the comment fields
+  `name`, `email`, and `comment` in `news.php` allowed script injection.
+
+Error messages and strings from the vulnerable original that people
+typically search for: `"tpath"`, `"remote file inclusion"`,
+`"CzarNews"`, `"Powered by CzarNews"`, `"CzarNews v1.12"`,
+`"news.php?a="`, `"headlines.php?tpath="`.
+
+## Migrating from v1.12–v1.14
+
+1. Keep your `cn_*` database tables — they are compatible.
+2. Replace all files with this release, copy `cn_dbdefs.example.php`
+   to `cn_dbdefs.php` with your credentials.
+3. Set `cn_config.version` in the database to the `$cnver` value in
+   `cn_config.php`. Schema upgrades run automatically on first load.
+
 ## Upgrading from 1.x
 
 Import-keep your `cn_*` tables, drop in the new files, and set

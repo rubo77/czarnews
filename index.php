@@ -29,8 +29,6 @@ $q['add'] = mysql_query ("INSERT INTO $t_news (id, author, cat, subject, content
 echo S("New news has been added");
 exit;
 }
-### Set variables for adding
-$button_txt = "Add News";
 } elseif($op == "edit") {
 $q['edit'] = mysql_query("SELECT * FROM $t_news WHERE id = '$id'", $link) or E("Couldn't retieve news info:<br>" . mysql_error());
 $ev = mysql_fetch_array($q['edit'], MYSQL_ASSOC);
@@ -47,8 +45,6 @@ $q['update'] = mysql_query ("UPDATE $t_news SET cat='$cat', subject='$subject', 
 echo S("News has been edited");
 exit;
 }
-### Set variables for editing
-$button_txt = "Save News";
 } elseif($op == "del") {
 
 ### Fetch info about record
@@ -209,8 +205,7 @@ Source URL:
 <input type="hidden" name="op" value="<?=$op?>">
 <input type="hidden" name="id" value="<?=$id?>">
 <input type="hidden" name="go" value="true">
-<input type="submit" name="submit" value="<?=$button_txt?>" class="input">&nbsp;&nbsp;
-<input type="button" name="cancel" value="Cancel" class="input" onClick="javascript:location.href='<?=$_SERVER['PHP_SELF']?>'">
+<input type="submit" name="submit" value="Abschicken" class="input">
 </td></tr>
 </table><br>
 

@@ -80,6 +80,47 @@ All known CVEs are fixed:
 - comment deletion (`dpost.php`) for logged-in admins, with a delete
   link shown next to comments for authorized users
 
+## Installation
+
+The original web installer (`install.php`) is gone — installs are done
+manually:
+
+1. Import the schema: `mysql -u USER -p DBNAME < czarnews.sql`
+   (on modern MariaDB/MySQL replace `TYPE=MyISAM` with `ENGINE=MyISAM`
+   if your server rejects it)
+2. Copy `cn_dbdefs.example.php` to `cn_dbdefs.php` and fill in your
+   database credentials.
+3. Create the single required config row — either open
+   `cn_webconfig.php` once (it seeds defaults when the table is empty)
+   or insert a row into `cn_config` with `version` matching `$cnver`
+   in `cn_config.php`.
+4. Create a user in `cn_users` (or open `index.php` — with zero users
+   the user-admin page is reachable without login).
+
+## Embedding the news page
+
+`news.php` is included into your own PHP page. Declare `$tpath` as the
+absolute filesystem path to the CzarNews directory first:
+
+```php
+<?php
+$tpath = "/home/user/public_html/czarnews/";
+include($tpath . "news.php");
+?>
+```
+
+For just the latest headlines, use `headlines.php` the same way. The
+admin "Code Generator" page produces ready-made snippets.
+
+## Troubleshooting
+
+- **Blank/failed page right after install**: `cn_config` has no row —
+  `cn_config.php` then tries to include the (removed) installer. Seed
+  one row via `cn_webconfig.php`.
+- **Upgrade from an older release**: no manual migration needed. Missing
+  `lang`/`logo` columns on `cn_config` are added automatically on the
+  first request; just set `version` in `cn_config` to the new `$cnver`.
+
 ## Layout
 
 - `index.php` — admin panel (news list, add/edit/delete)
@@ -92,6 +133,12 @@ All known CVEs are fixed:
 - `lang/` — language files (`en.php`, `de.php`); add a `<code>.php` map
   there and it shows up as a language option
 - `czarnews.sql` — database schema
+
+## Upgrading from 1.x
+
+Import-keep your `cn_*` tables, drop in the new files, and set
+`cn_config.version` to the `$cnver` value in `cn_config.php` so the
+version check passes. The schema upgrade runs automatically.
 
 ## License
 

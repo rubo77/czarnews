@@ -175,7 +175,7 @@ GLOBAL $link, $t_user;
 
 $q['uinfo'] = mysql_query("SELECT $field FROM $t_user WHERE id='$id'", $link);
 $inf = mysql_fetch_array($q['uinfo'], MYSQL_ASSOC);
-return "$inf[$field]";
+return $inf[$field] ?? "";
 }
 
 ### Drop-down category select box ###

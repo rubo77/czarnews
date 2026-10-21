@@ -11,7 +11,7 @@ if(!isset($demo)) { $demo = "off"; }
 $ev = array("id"=>"", "user"=>"", "pass"=>"", "email"=>"", "categories"=>"", "admin"=>"", "news"=>"", "users"=>"", "cats"=>"", "config"=>"", "words"=>"");
 
 ### If user is not a "User Admin" or an "Ultimate Admin", do not grant access
-if($useri['users'] != "on" && $useri['admin'] != "on") {
+if(isset($useri) && $useri['users'] != "on" && $useri['admin'] != "on") {
 print E("You are not allowed to edit users");
 }
 

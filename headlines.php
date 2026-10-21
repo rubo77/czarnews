@@ -1,6 +1,9 @@
 <?php 
 ### headlines.php [v1.12] 
 
+// $tpath is set by the page that embeds this file; default to this
+// directory so headlines.php also works when requested directly.
+if(!isset($tpath)) { $tpath = dirname(__FILE__) . "/"; }
 require($tpath . "cn_config.php");
 if(!isset($link)) {
 exit("Please make sure the \"\$tpath\" veriable is the root path to where 'headlines.php' is on your server.");

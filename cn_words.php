@@ -1,10 +1,16 @@
-<?
+<?php 
 $pagetitle = "Keyword Admin";
 include("cn_auth.php");
 include("cn_head.php");
 
+// optional request parameters
+if(!isset($go)) { $go = ""; }
+if(!isset($id)) { $id = ""; }
+// keyword row being edited; empty defaults when adding a new one
+$ev = array("id"=>"", "word"=>"", "type"=>"", "replaced"=>"");
+
 ### If user is not a "Keyword Admin" or an "Ultimate Admin", do not grant access
-if($useri[words] != "on" && $useri[admin] != "on") {
+if($useri['words'] != "on" && $useri['admin'] != "on") {
 print E("You are not allowed to edit keywords");
 }
 
@@ -47,48 +53,48 @@ exit;
 $q['del'] = mysql_query("SELECT word FROM $t_words WHERE id = '$id'", $link) or E("Couldn't select keyword:<br>" . mysql_error());
 $dv = mysql_fetch_array($q['del'], MYSQL_ASSOC);
 ?>
-<form method="post" action="<? echo $PHP_SELF; ?>" name="theform">
-Are you sure you want to delete "<b><?=$dv[word]?></b>"?<br><br>
+<form method="post" action="<?php  echo $_SERVER['PHP_SELF']; ?>" name="theform">
+Are you sure you want to delete "<b><?=$dv['word']?></b>"?<br><br>
 <input type="hidden" name="op" value="<?=$op?>">
 <input type="hidden" name="id" value="<?=$id?>">
 <input type="hidden" name="go" value="true">
-<input type="submit" name="submit" value="Yes" class="input">&nbsp;&nbsp;<input type="button" onClick="javascript:location.href='<?=$PHP_SELF?>'" value="No" class="input">
-<?
+<input type="submit" name="submit" value="Yes" class="input">&nbsp;&nbsp;<input type="button" onClick="javascript:location.href='<?=$_SERVER['PHP_SELF']?>'" value="No" class="input">
+<?php 
 exit;
 }
 ?>
 
-<form method="post" action="<? echo $PHP_SELF; ?>" name="theform">
+<form method="post" action="<?php  echo $_SERVER['PHP_SELF']; ?>" name="theform">
 <table  width="100%" border="0" cellspacing="1" cellpadding="2" align="center">
-<tr><td bgcolor="<? print $MenuBg2; ?>">
+<tr><td bgcolor="<?php  print $MenuBg2; ?>">
 Keyword:
-</td><td bgcolor="<? print $MenuBg1; ?>">
-<input type="text" name="word" size="25" class="input" value="<?=stripslashes($ev[word])?>">
+</td><td bgcolor="<?php  print $MenuBg1; ?>">
+<input type="text" name="word" size="25" class="input" value="<?=stripslashes($ev['word'])?>">
 </td></tr>
-<tr><td bgcolor="<? print $MenuBg2; ?>">
+<tr><td bgcolor="<?php  print $MenuBg2; ?>">
 Replacement:
-</td><td bgcolor="<? print $MenuBg1; ?>">
+</td><td bgcolor="<?php  print $MenuBg1; ?>">
 <br>
 <select name="type">
-<option value="text"<? if($ev[type] == "text" || $op == "add") { print " SELECTED"; } ?>>Text</option>
-<option value="link"<? if($ev[type] == "link") { print " SELECTED"; } ?>>Hyperink URL</option>
-<option value="picture"<? if($ev[type] == "picture") { print " SELECTED"; } ?>>Picture URL</option>
-<option value="html"<? if($ev[type] == "html") { print " SELECTED"; } ?>>HTML Code</option>
+<option value="text"<?php  if($ev['type'] == "text" || $op == "add") { print " SELECTED"; } ?>>Text</option>
+<option value="link"<?php  if($ev['type'] == "link") { print " SELECTED"; } ?>>Hyperink URL</option>
+<option value="picture"<?php  if($ev['type'] == "picture") { print " SELECTED"; } ?>>Picture URL</option>
+<option value="html"<?php  if($ev['type'] == "html") { print " SELECTED"; } ?>>HTML Code</option>
 </select>
-<textarea cols="40" rows="3" name="replace" class="input"><?=stripslashes($ev[replaced])?></textarea>
+<textarea cols="40" rows="3" name="replace" class="input"><?=stripslashes($ev['replaced'])?></textarea>
 </td></tr>
-<tr><td bgcolor="<? print $MenuBg2; ?>">
+<tr><td bgcolor="<?php  print $MenuBg2; ?>">
 &nbsp;
-</td><td bgcolor="<? print $MenuBg1; ?>">
+</td><td bgcolor="<?php  print $MenuBg1; ?>">
 <input type="hidden" name="op" value="<?=$op?>">
 <input type="hidden" name="id" value="<?=$id?>">
 <input type="hidden" name="go" value="true">
 <input type="submit" name="submit" value="<?=$button_txt?>" class="input">&nbsp;&nbsp;
-<input type="button" name="cancel" value="Cancel" class="input" onClick="javascript:location.href='<?=$PHP_SELF?>'">
+<input type="button" name="cancel" value="Cancel" class="input" onClick="javascript:location.href='<?=$_SERVER['PHP_SELF']?>'">
 </td></tr>
 </table><br>
 
-<?
+<?php 
 } else {
 // Set limits for multiple pages
 if(!isset($pg)) { $pg = 1; }
@@ -105,26 +111,27 @@ print "<br><br>No keywords found in database";
 }
 ?>
 <table border="0" cellpadding="1" cellspacing="1" width="100%" align="center">
-<?
+<?php 
 $i=$lims+1;
 while ($r = mysql_fetch_array($q['info'], MYSQL_ASSOC)) {
-if($r[type] == "link") { $r[replaced] = "<a href=\"$r[replaced]\" target=\"_blank\">$r[word]</a>";
-} elseif($r[type] == "picture") { $r[replaced] = "<img src=\"$r[replaced]\" alt=\"$r[word]\">";
-} elseif($r[type] != "html") { $r[replaced] = cutstr($r[replaced]); }
+if($r['type'] == "link") { $r['replaced'] = "<a href=\"{$r['replaced']}\" target=\"_blank\">{$r['word']}</a>";
+} elseif($r['type'] == "picture") { $r['replaced'] = "<img src=\"{$r['replaced']}\" alt=\"{$r['word']}\">";
+} elseif($r['type'] != "html") { $r['replaced'] = cutstr($r['replaced']); }
 ?>
 <tr><td nowrap><?=$i?>)&nbsp;</td>
-<td bgcolor="#EEEEEE" width="40%">&nbsp;<a href="?op=edit&id=<?=$r[id]?>"><b><? echo cutstr($r[word]); ?></b></a></td>
-<td bgcolor="#EEEEEE" width="40%">&nbsp;<? echo $r[replaced]; ?>&nbsp;</td>
-<td nowrap><a href="?op=del&id=<?=$r[id]?>">[Delete]</a></td>
+<td bgcolor="#EEEEEE" width="40%">&nbsp;<a href="?op=edit&id=<?=$r['id']?>"><b><?php  echo cutstr($r['word']); ?></b></a></td>
+<td bgcolor="#EEEEEE" width="40%">&nbsp;<?php  echo $r['replaced']; ?>&nbsp;</td>
+<td nowrap><a href="?op=del&id=<?=$r['id']?>">[Delete]</a></td>
 </tr>
-<?
+<?php 
 $i++;
 }
 ?>
 </table><br>
 <div align="center">
-<?
+<?php 
 ### Page numbering code
+$totalpages = 0;
 if ($wordnum > $pgset) {
 if ($pg != "1") {
 $pgn = $pg-1;
@@ -143,7 +150,7 @@ print "<b>$loop</b>";
 print "&nbsp;&nbsp;";
 }
 else {
-print "<b><a href=\"$PHP_SELF?pg=$loop\">";
+print "<b><a href=\"{$_SERVER['PHP_SELF']}?pg=$loop\">";
 print $loop;
 print "</a></b>";
 print "&nbsp;&nbsp;";
@@ -159,7 +166,7 @@ print "</a>";
 }
 ?>
 </div>
-<?
+<?php 
 }
 include("cn_foot.php");
 ?>

@@ -1,4 +1,4 @@
-<?
+<?php 
 $pagetitle = "Information/About";
 include("cn_auth.php");
 include("cn_head.php");
@@ -23,6 +23,6 @@ If you have no input on the script for future releases, but would still like to 
 </form>
 </ul>
 
-<?
+<?php 
 include("cn_foot.php");
 ?>

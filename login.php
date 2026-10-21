@@ -1,9 +1,9 @@
-<?
+<?php 
 $pagetitle = "User Login";
 include_once("cn_head.php");
 ?>
 
-<? if(isset($msg)) { ?><font color=#ff0000><?=$msg?></font><? } ?>
+<?php  if(isset($msg)) { ?><font color=#ff0000><?=$msg?></font><?php  } ?>
 <table width="100%" border="0" cellspacing="0" cellpadding="5">
 	<tr>
 		<td valign="top">
@@ -34,6 +34,6 @@ This is an admin area that is restricted to authorized users only.  Please login
 	</tr></form>
 </table>
 
-<?
+<?php 
 include_once("cn_foot.php");
 ?>

@@ -1,5 +1,5 @@
 <?php
-require_once( "includes/php7_fix.inc.php");
+require_once(__DIR__."/../includes/php7_fix.inc.php");
 ##########################################
 ### 
 ### CzarNews v1.12
@@ -12,6 +12,8 @@ $cnver = "1.12";
 ##########################################
 
 // $tpath ist in news.php im czarnews ordner definiert
+// empty when CzarNews runs directly from its own directory
+if(!isset($tpath)) { $tpath = ""; }
 if(file_exists($tpath . "cn_dbdefs.php")) {
 // Include MySQL Definitions
 require($tpath . "cn_dbdefs.php");
@@ -22,6 +24,12 @@ exit;
 
 // Directory the images are in
 $imgdir = "images/";
+
+// Alternating table row background colors used by the admin templates;
+// no values were ever configured for this installation, keep them empty
+// so the table renders with the default background.
+$MenuBg1 = "";
+$MenuBg2 = "";
 
 // Make the default database connection
 $link = mysql_connect($dbhost, $dbuser, $dbpass) or die ("Unable to connect to MySQL server.<br>" . mysql_error()); 
@@ -54,15 +62,15 @@ exit;
 }
 
 // User functions
-if (isset($cncook) && $op != "logout") {
- list ($usern, $passw) = split ('[,]', $cncook);
+if (isset($cncook) && ($op ?? "") != "logout") {
+ list ($usern, $passw) = explode(',', $cncook);
  $q['useri'] = mysql_query("SELECT * FROM $t_user WHERE user='$usern' && pass='$passw'", $link);
  if (mysql_num_rows($q['useri']) != 0) {
   $useri = mysql_fetch_array($q['useri'], MYSQL_ASSOC);
  } else {
   setcookie('cncook','',time()-28800,'/');
  }
-} elseif (isset($cncook) && $op == "logout") {
+} elseif (isset($cncook) && ($op ?? "") == "logout") {
 setcookie('cncook','',time()-28800,'/');
 }
 // Asseble user cetegories into an array
@@ -106,7 +114,6 @@ $tzones = Array(
 
 ### Success Message ###
 function S($msg) {
-global $PHP_SELF;
 ?>
 <center>
 <table border="0" cellpadding="1" cellspacing="1" width="500" bgcolor="#FFFFFF" class="menu"><tr>
@@ -115,27 +122,26 @@ global $PHP_SELF;
 <td class="value">
 <blockquote><br>
 
-<? print $msg; ?>
+<?php  print $msg; ?>
 
 <br><br>
 </blockquote>
 </td>
 </tr><tr>
 <td class="head" colspan="2"><center>
-<input type="button" value=" Okay " onClick="javascript:location.href('<? print $PHP_SELF; ?>')">&nbsp;&nbsp;
+<input type="button" value=" Okay " onClick="javascript:location.href('<?php  print $_SERVER['PHP_SELF']; ?>')">&nbsp;&nbsp;
 <input type="button" value=" Main " onClick="javascript:location.href('index.php')">
 </center></td></tr>
 </table>
 </center>
 <br><br>
-<?
+<?php 
 include("cn_foot.php");
 exit;
  }
 
 ### Error Message ###
 function E($msg) {
-global $PHP_SELF;
 ?>
 <center>
 <table border="0" cellpadding="1" cellspacing="1" width="500" bgcolor="#FFFFFF" class="menu"><tr>
@@ -144,7 +150,7 @@ global $PHP_SELF;
 <td class="value">
 <blockquote><br>
 
-<? print $msg; ?>
+<?php  print $msg; ?>
 
 <br><br>
 </blockquote>
@@ -157,7 +163,7 @@ global $PHP_SELF;
 </table>
 </center>
 <br><br>
-<?
+<?php 
 include("cn_foot.php");
 exit;
  }
@@ -189,18 +195,18 @@ function gone() {
 location=document.theform.<?=$boxname?>.options[document.theform.<?=$boxname?>.selectedIndex].value
 }
 //-->
-</script><? } ?>
-<? if($jump == "yes") { ?><form name="theform" action="" method="post"><? } ?>	
-<select name="<?=$boxname?>"<? if($jump == "yes") { ?> onChange="gone()" <? } ?>>
-<?
+</script><?php  } ?>
+<?php  if($jump == "yes") { ?><form name="theform" action="" method="post"><?php  } ?>	
+<select name="<?=$boxname?>"<?php  if($jump == "yes") { ?> onChange="gone()" <?php  } ?>>
+<?php 
 if($useri['categories'] == "all" || $mode != "admin") {
 // Print "View All" selection for view all categories [v1.12]
-if($mode != "admin") { print "<option value=\"$PHP_SELF?\">View All</option>\n"; }
+if($mode != "admin") { print "<option value=\"{$_SERVER['PHP_SELF']}?\">View All</option>\n"; }
 while($cv = mysql_fetch_array($q['box'], MYSQL_ASSOC)) {
 ?>
-<option value="<? if($jump == "yes") { ?><?=$PHP_SELF?>?<?=$boxname?>=<? } ?><? print $cv['id']; ?>"<?if($cat==$cv['id']){print " SELECTED";}?>><? print stripslashes($cv['name']); ?></option>
-<? if($jump == "yes") { ?></form><? } ?>
-<? }
+<option value="<?php  if($jump == "yes") { ?><?=$_SERVER['PHP_SELF']?>?<?=$boxname?>=<?php  } ?><?php  print $cv['id']; ?>"<?php if($cat==$cv['id']){print " SELECTED";}?>><?php  print stripslashes($cv['name']); ?></option>
+<?php  if($jump == "yes") { ?></form><?php  } ?>
+<?php  }
 } else {
 ### Assemble the categories field into an array for selection ###
 $cats = explode(", ", $useri['categories']);
@@ -208,15 +214,15 @@ foreach($cats as $cv) {
 $q['cat'] = mysql_query("SELECT * FROM $t_cats WHERE id = '$cv'", $link) or E("Couldn't select category with id:<br>" . mysql_error());
 $cva = mysql_fetch_array($q['cat'], MYSQL_ASSOC);
 ?>
-<option value="<? print $cv; ?>"<?if($cat==$cv){print " SELECTED";}?>><? print stripslashes($cva['name']); ?>
-<?
+<option value="<?php  print $cv; ?>"<?php if($cat==$cv){print " SELECTED";}?>><?php  print stripslashes($cva['name']); ?>
+<?php 
 }
 }
 ?>
 </select>
-<? if($jump == "yes") { ?>
+<?php  if($jump == "yes") { ?>
 <input type="button" name="go" value="Go" onClick="gone()">
-<?
+<?php 
 }
 }
 }
@@ -250,9 +256,9 @@ timezone on a machine in -05:00.
 function zonechange($current, $target, $date="") {
 $current = -1 * $current;
 if($date == "") {
-$zonedate = mktime(date('G'), date('i'), date('s'), date('n'), date('j'), date('Y'), 1) + (($current + $target) * 3600);
+$zonedate = mktime(date('G'), date('i'), date('s'), date('n'), date('j'), date('Y')) + (($current + $target) * 3600);
 } else {
-$zonedate = mktime(date('G', $date), date('i', $date), date('s', $date), date('n', $date), date('j', $date), date('Y', $date), 1) + (($current + $target) * 3600);
+$zonedate = mktime(date('G', $date), date('i', $date), date('s', $date), date('n', $date), date('j', $date), date('Y', $date)) + (($current + $target) * 3600);
 }
 return $zonedate;
 }

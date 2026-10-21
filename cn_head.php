@@ -1,4 +1,4 @@
-<?
+<?php 
 ##########################################
 ### 
 ### CzarNews v1.12
@@ -14,7 +14,7 @@ include_once("cn_config.php");
 function userlink() {
 GLOBAL $useri;
 if(isset($useri)) {
-print "Welcome $useri[user] | <a href=\"?op=logout\">Logout</a>";
+print "Welcome {$useri['user']} | <a href=\"?op=logout\">Logout</a>";
 } else {
 print "&nbsp;";
 }
@@ -59,7 +59,7 @@ function openBox( thebox ) {
 		<td width="99%" valign="bottom" bgcolor="#FFFFFF">
 <table width="100%" border="0" cellspacing="0" cellpadding="0"><tr>
 <td><img src="<?=$imgdir?>cn_logo_l.gif" width="300" height="100" alt="CzarNews"><br></td>
-<td valign="bottom" align="right"><? print userlink(); ?></td>
+<td valign="bottom" align="right"><?php  print userlink(); ?></td>
 </tr></table>
 		</td>
 	</tr>
@@ -73,14 +73,14 @@ function openBox( thebox ) {
 <table width="100%" border="0" cellspacing="0" cellpadding="0"><tr>
 <td valign="top" width="150" align="left">
 <table border="0" width="135" align="left">
-	<? if(isset($useri)) { ?><tr><td width="100%"><a href="index.php" class="menulink">News</a></td></tr><? } ?>
-	<? if($useri[cats] == "on" || $useri[admin] == "on") { ?><tr><td width="100%"><a href="cn_cats.php" class="menulink">Categories</a></td></tr><? } ?>
-	<? if($useri[words] == "on" || $useri[admin] == "on") { ?><tr><td width="100%"><a href="cn_words.php" class="menulink">Keywords/Filter</a></td></tr><? } ?>
-		<? if($useri[users] == "on" || $useri[admin] == "on") { ?><tr><td width="100%"><a href="cn_users.php" class="menulink">Users</a></td></tr><? } ?>
-	<? if($useri[config] == "on" || $useri[admin] == "on") { ?><tr><td width="100%"><a href="cn_webconfig.php" class="menulink">Configuration</a></td></tr><? } ?>
-	<? if($useri[admin] == "on") { ?><tr><td width="100%"><a href="cn_generate.php" class="menulink">Code Generator</a></td></tr><? } ?>
-	<? if(isset($useri)) { ?><tr><td width="100%"><a href="cn_info.php" class="menulink">Info/About</a></td></tr><? } ?>
-	<? if(isset($useri)) { ?><tr><td width="100%"><a href="?op=logout" class="menulink">Logout</a></td></tr><? } ?>
+	<?php  if(isset($useri)) { ?><tr><td width="100%"><a href="index.php" class="menulink">News</a></td></tr><?php  } ?>
+	<?php  if(isset($useri) && ($useri['cats'] == "on" || $useri['admin'] == "on")) { ?><tr><td width="100%"><a href="cn_cats.php" class="menulink">Categories</a></td></tr><?php  } ?>
+	<?php  if(isset($useri) && ($useri['words'] == "on" || $useri['admin'] == "on")) { ?><tr><td width="100%"><a href="cn_words.php" class="menulink">Keywords/Filter</a></td></tr><?php  } ?>
+		<?php  if(isset($useri) && ($useri['users'] == "on" || $useri['admin'] == "on")) { ?><tr><td width="100%"><a href="cn_users.php" class="menulink">Users</a></td></tr><?php  } ?>
+	<?php  if(isset($useri) && ($useri['config'] == "on" || $useri['admin'] == "on")) { ?><tr><td width="100%"><a href="cn_webconfig.php" class="menulink">Configuration</a></td></tr><?php  } ?>
+	<?php  if(isset($useri) && $useri['admin'] == "on") { ?><tr><td width="100%"><a href="cn_generate.php" class="menulink">Code Generator</a></td></tr><?php  } ?>
+	<?php  if(isset($useri)) { ?><tr><td width="100%"><a href="cn_info.php" class="menulink">Info/About</a></td></tr><?php  } ?>
+	<?php  if(isset($useri)) { ?><tr><td width="100%"><a href="?op=logout" class="menulink">Logout</a></td></tr><?php  } ?>
 	<tr><td width="100%">&nbsp;</td></tr>
 </table>
 </td><td valign="top" width="470">

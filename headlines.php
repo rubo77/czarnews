@@ -1,4 +1,4 @@
-<?
+<?php 
 ### headlines.php [v1.12] 
 
 require($tpath . "cn_config.php");
@@ -11,6 +11,8 @@ if(!isset($page)) { $page = "/index.php"; }
 if(!isset($lim)) { $lim = "5"; }
 // Number of characters to cut news titles at 
 if(!isset($charnum)) { $charnum = "18"; }
+// optional category filter
+if(!isset($c)) { $c = ""; }
 
 // Get news items from database, and order them from newest to oldest 
 if($c != "") { $t_news .= " WHERE cat = '$c'"; }
@@ -21,8 +23,8 @@ while($h = mysql_fetch_array($q['info'], MYSQL_ASSOC)) {
 // Edit the HTML code between the dashed lines
 // ------------------------------------------------------------------
 ?>
-&nbsp;&#187; <a href="<? print $page; ?>?a=<? print $h[id]; ?>" title="<?=$h[subject]?>"><? print cutstr($h[subject],"$charnum"); ?></a><br>
-<?
+&nbsp;&#187; <a href="<?php  print $page; ?>?a=<?php  print $h['id']; ?>" title="<?=$h['subject']?>"><?php  print cutstr($h['subject'],"$charnum"); ?></a><br>
+<?php 
 // ------------------------------------------------------------------
 }
 ?>
